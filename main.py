@@ -4,57 +4,59 @@ from datetime import datetime, timedelta
 from weather_data import WEATHER_DATA, MONTHLY_WEATHER
 import calendar
 
-# Modern color scheme
-COLORS = {
-    "bg": "#1a1a1a",
-    "tile_bg": "#2d2d2d",
-    "text": "#ffffff",
-    "accent": "#00ff9d",
-    "secondary": "#00b8ff",
-    "warning": "#ff3e3e",
-    "button": "#3d3d3d",
-    "button_hover": "#4d4d4d"
+# Theme color schemes
+THEMES = {
+    "light": {
+        "bg": "#f8fafc",
+        "tile_bg": "#ffffff",
+        "text": "#334155",
+        "accent": "#3b82f6",
+        "secondary": "#0ea5e9",
+        "warning": "#ef4444",
+        "button": "#ffffff",
+        "button_hover": "#f1f5f9",
+        "shadow": "#e2e8f0",
+        "border": "#e2e8f0",
+        "menu_bg": "#ffffff",
+        "menu_fg": "#334155",
+        "gradient_start": "#f0f9ff",
+        "gradient_end": "#e0f2fe",
+        "glass_bg": "#ffffff",
+        "glass_border": "#e2e8f0"
+    },
+    "dark": {
+        "bg": "#0f172a",
+        "tile_bg": "#1e293b",
+        "text": "#e2e8f0",
+        "accent": "#38bdf8",
+        "secondary": "#818cf8",
+        "warning": "#f87171",
+        "button": "#1e293b",
+        "button_hover": "#334155",
+        "shadow": "#0f172a",
+        "border": "#334155",
+        "menu_bg": "#1e293b",
+        "menu_fg": "#e2e8f0",
+        "gradient_start": "#1e293b",
+        "gradient_end": "#0f172a",
+        "glass_bg": "#1e293b",
+        "glass_border": "#334155"
+    }
 }
 
-def apply_modern_style():
-    """Apply modern styling to the application"""
-    style = ttk.Style()
-    style.theme_use('clam')
+def create_glass_frame(parent, theme="light", **kwargs):
+    """Create a frame with glass-morphic effect"""
+    frame = tk.Frame(parent,
+                    bg=THEMES[theme]["glass_bg"],
+                    highlightbackground=THEMES[theme]["glass_border"],
+                    highlightthickness=1,
+                    **kwargs)
     
-    # Configure styles
-    style.configure("Modern.TFrame",
-                   background=COLORS["tile_bg"],
-                   relief="flat",
-                   borderwidth=0)
+    # Add shadow effect
+    frame.configure(relief="flat")
+    frame.bind("<Map>", lambda e: frame.configure(relief="flat"))
     
-    style.configure("Modern.TLabel",
-                   background=COLORS["tile_bg"],
-                   foreground=COLORS["text"],
-                   font=("Segoe UI", 10))
-    
-    style.configure("Date.TLabel",
-                   background=COLORS["tile_bg"],
-                   foreground=COLORS["accent"],
-                   font=("Segoe UI", 12, "bold"))
-    
-    style.configure("Icon.TLabel",
-                   background=COLORS["tile_bg"],
-                   foreground=COLORS["secondary"],
-                   font=("Segoe UI", 24))
-    
-    style.configure("Temp.TLabel",
-                   background=COLORS["tile_bg"],
-                   foreground=COLORS["text"],
-                   font=("Segoe UI", 9))
-    
-    style.configure("Modern.TButton",
-                   background=COLORS["button"],
-                   foreground=COLORS["text"],
-                   font=("Segoe UI", 10),
-                   padding=10)
-    
-    style.map("Modern.TButton",
-              background=[("active", COLORS["button_hover"])])
+    return frame
 
 def get_weather_for_date(date):
     """Get weather data for a specific date from our static data"""
@@ -62,10 +64,10 @@ def get_weather_for_date(date):
     weather_type = MONTHLY_WEATHER[day_index]
     return WEATHER_DATA[weather_type]
 
-def create_weather_tile(parent, date, column):
+def create_weather_tile(parent, date, column, theme="light"):
     """Create a single weather tile with modern styling"""
-    frame = ttk.Frame(parent, style="Modern.TFrame", padding="15")
-    frame.grid(row=0, column=column, padx=10, pady=10, sticky="nsew")
+    frame = create_glass_frame(parent, theme=theme, padx=15, pady=15)
+    frame.grid(row=0, column=column, padx=15, pady=15, sticky="nsew")
     
     # Add date label with accent color
     date_label = ttk.Label(frame, 
@@ -112,19 +114,40 @@ class WeatherApp:
     def __init__(self, root):
         self.root = root
         self.root.title("Monthly Weather Forecast")
-        self.root.configure(bg=COLORS["bg"])
-        self.root.attributes('-fullscreen', True)
+        
+        # Initialize with light theme
+        self.current_theme = "light"
+        self.colors = THEMES[self.current_theme]
+        
+        # Configure root window
+        self.root.configure(bg=self.colors["bg"])
+        
+        # Set window size and position
+        window_width = 1200
+        window_height = 400
+        screen_width = self.root.winfo_screenwidth()
+        screen_height = self.root.winfo_screenheight()
+        
+        # Calculate position for center of screen
+        x = (screen_width - window_width) // 2
+        y = (screen_height - window_height) // 2
+        
+        # Set window size and position
+        self.root.geometry(f"{window_width}x{window_height}+{x}+{y}")
+        
+        # Create menu bar
+        self.create_menu()
         
         # Apply modern styling
-        apply_modern_style()
+        self.apply_modern_style()
         
-        # Create main container
+        # Create main container with gradient background
         self.main_container = ttk.Frame(root, style="Modern.TFrame")
         self.main_container.pack(fill="both", expand=True)
         
         # Create canvas for scrolling
         self.canvas = tk.Canvas(self.main_container, 
-                              bg=COLORS["bg"],
+                              bg=self.colors["bg"],
                               highlightthickness=0)
         self.canvas.pack(side="left", fill="both", expand=True)
         
@@ -154,11 +177,100 @@ class WeatherApp:
         # Add see more button
         self.create_see_more_button()
         
-        # Bind escape key
-        self.root.bind('<Escape>', lambda e: self.root.attributes('-fullscreen', False))
-        
         # Bind mouse wheel for horizontal scrolling
         self.canvas.bind_all("<MouseWheel>", self._on_mousewheel)
+    
+    def apply_modern_style(self):
+        """Apply modern styling to the application"""
+        style = ttk.Style()
+        style.theme_use('clam')
+        
+        # Configure styles
+        style.configure("Modern.TFrame",
+                       background=self.colors["tile_bg"],
+                       relief="flat",
+                       borderwidth=0)
+        
+        style.configure("Modern.TLabel",
+                       background=self.colors["tile_bg"],
+                       foreground=self.colors["text"],
+                       font=("Segoe UI", 10))
+        
+        style.configure("Date.TLabel",
+                       background=self.colors["tile_bg"],
+                       foreground=self.colors["accent"],
+                       font=("Segoe UI", 12, "bold"))
+        
+        style.configure("Icon.TLabel",
+                       background=self.colors["tile_bg"],
+                       foreground=self.colors["secondary"],
+                       font=("Segoe UI", 24))
+        
+        style.configure("Temp.TLabel",
+                       background=self.colors["tile_bg"],
+                       foreground=self.colors["text"],
+                       font=("Segoe UI", 9))
+        
+        style.configure("Modern.TButton",
+                       background=self.colors["button"],
+                       foreground=self.colors["text"],
+                       font=("Segoe UI", 10),
+                       padding=10)
+        
+        style.map("Modern.TButton",
+                  background=[("active", self.colors["button_hover"])])
+    
+    def create_menu(self):
+        """Create the menu bar"""
+        menubar = tk.Menu(self.root, bg=self.colors["menu_bg"], fg=self.colors["menu_fg"])
+        self.root.config(menu=menubar)
+        
+        # Theme menu
+        theme_menu = tk.Menu(menubar, tearoff=0, bg=self.colors["menu_bg"], fg=self.colors["menu_fg"])
+        menubar.add_cascade(label="Theme", menu=theme_menu)
+        
+        # Add theme options
+        theme_menu.add_command(label="Light", command=lambda: self.change_theme("light"))
+        theme_menu.add_command(label="Dark", command=lambda: self.change_theme("dark"))
+        
+        # Add separator
+        theme_menu.add_separator()
+        
+        # Add exit option
+        theme_menu.add_command(label="Exit", command=self.root.quit)
+    
+    def change_theme(self, theme):
+        """Change the application theme"""
+        self.current_theme = theme
+        self.colors = THEMES[theme]
+        
+        # Update root window
+        self.root.configure(bg=self.colors["bg"])
+        
+        # Update canvas
+        self.canvas.configure(bg=self.colors["bg"])
+        
+        # Update menu colors
+        for menu in self.root.winfo_children():
+            if isinstance(menu, tk.Menu):
+                menu.configure(bg=self.colors["menu_bg"], fg=self.colors["menu_fg"])
+                for submenu in menu.winfo_children():
+                    if isinstance(submenu, tk.Menu):
+                        submenu.configure(bg=self.colors["menu_bg"], fg=self.colors["menu_fg"])
+        
+        # Reapply styles
+        self.apply_modern_style()
+        
+        # Recreate all tiles
+        for widget in self.scrollable_frame.winfo_children():
+            widget.destroy()
+        self.create_initial_tiles()
+        
+        # Recreate see more button
+        for widget in self.main_container.winfo_children():
+            if isinstance(widget, tk.Frame):
+                widget.destroy()
+        self.create_see_more_button()
     
     def _on_mousewheel(self, event):
         """Handle mouse wheel scrolling"""
@@ -168,18 +280,20 @@ class WeatherApp:
         """Create initial 7 weather tiles"""
         for i in range(7):
             date = self.current_date + timedelta(days=i)
-            create_weather_tile(self.scrollable_frame, date, i)
+            create_weather_tile(self.scrollable_frame, date, i, theme=self.current_theme)
     
     def create_see_more_button(self):
         """Create see more button"""
-        button_frame = ttk.Frame(self.main_container, style="Modern.TFrame")
-        button_frame.pack(side="right", padx=20)
+        # Create a frame that matches the height of weather tiles
+        button_frame = create_glass_frame(self.main_container, theme=self.current_theme, padx=15, pady=15)
+        button_frame.pack(side="right", padx=15, pady=15)
         
+        # Create the button
         self.see_more = ttk.Button(button_frame,
                                   text=f"See {self.remaining_days} More Days →",
                                   style="Modern.TButton",
                                   command=self.show_remaining_days)
-        self.see_more.pack(pady=20)
+        self.see_more.pack(expand=True, fill="both", padx=10, pady=10)
     
     def show_remaining_days(self):
         """Show all remaining days of the month"""
@@ -189,7 +303,7 @@ class WeatherApp:
         # Create tiles for remaining days
         for i in range(7, self.days_in_month):
             date = self.current_date + timedelta(days=i)
-            create_weather_tile(self.scrollable_frame, date, i)
+            create_weather_tile(self.scrollable_frame, date, i, theme=self.current_theme)
         
         # Update button text
         self.see_more.configure(text="All Days Shown")
@@ -197,7 +311,7 @@ class WeatherApp:
 
 def main():
     root = tk.Tk()
-    app = WeatherApp(root)
+    WeatherApp(root)  # Removed unused variable
     root.mainloop()
 
 if __name__ == "__main__":
