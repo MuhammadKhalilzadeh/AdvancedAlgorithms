@@ -5,124 +5,7 @@ from weather_data import WEATHER_DATA, MONTHLY_WEATHER
 import calendar
 from PIL import Image, ImageTk
 import os
-
-# Theme color schemes
-THEMES = {
-    "light": {
-        "bg": "#f8fafc",
-        "tile_bg": "#ffffff",
-        "text": "#334155",
-        "accent": "#3b82f6",
-        "secondary": "#0ea5e9",
-        "warning": "#ef4444",
-        "button": "#ffffff",
-        "button_hover": "#f1f5f9",
-        "shadow": "#e2e8f0",
-        "border": "#e2e8f0",
-        "menu_bg": "#ffffff",
-        "menu_fg": "#334155",
-        "gradient_start": "#f0f9ff",
-        "gradient_end": "#e0f2fe",
-        "glass_bg": "#ffffff",
-        "glass_border": "#e2e8f0",
-        "hover_glow": "#3b82f6"
-    },
-    "dark": {
-        "bg": "#0f172a",
-        "tile_bg": "#1e293b",
-        "text": "#e2e8f0",
-        "accent": "#38bdf8",
-        "secondary": "#818cf8",
-        "warning": "#f87171",
-        "button": "#1e293b",
-        "button_hover": "#334155",
-        "shadow": "#0f172a",
-        "border": "#334155",
-        "menu_bg": "#1e293b",
-        "menu_fg": "#e2e8f0",
-        "gradient_start": "#1e293b",
-        "gradient_end": "#0f172a",
-        "glass_bg": "#1e293b",
-        "glass_border": "#334155",
-        "hover_glow": "#38bdf8"
-    },
-    "sunny": {
-        "bg": "#fff7ed",
-        "tile_bg": "#ffffff",
-        "text": "#431407",
-        "accent": "#ea580c",
-        "secondary": "#f97316",
-        "warning": "#ef4444",
-        "button": "#ffffff",
-        "button_hover": "#fff7ed",
-        "shadow": "#fed7aa",
-        "border": "#fdba74",
-        "menu_bg": "#ffffff",
-        "menu_fg": "#431407",
-        "gradient_start": "#fff7ed",
-        "gradient_end": "#ffedd5",
-        "glass_bg": "#ffffff",
-        "glass_border": "#fdba74",
-        "hover_glow": "#ea580c"
-    },
-    "rainy": {
-        "bg": "#f1f5f9",
-        "tile_bg": "#ffffff",
-        "text": "#1e293b",
-        "accent": "#0ea5e9",
-        "secondary": "#38bdf8",
-        "warning": "#ef4444",
-        "button": "#ffffff",
-        "button_hover": "#f1f5f9",
-        "shadow": "#e2e8f0",
-        "border": "#cbd5e1",
-        "menu_bg": "#ffffff",
-        "menu_fg": "#1e293b",
-        "gradient_start": "#f1f5f9",
-        "gradient_end": "#e2e8f0",
-        "glass_bg": "#ffffff",
-        "glass_border": "#cbd5e1",
-        "hover_glow": "#0ea5e9"
-    },
-    "stormy": {
-        "bg": "#1e293b",
-        "tile_bg": "#334155",
-        "text": "#e2e8f0",
-        "accent": "#38bdf8",
-        "secondary": "#818cf8",
-        "warning": "#f87171",
-        "button": "#334155",
-        "button_hover": "#475569",
-        "shadow": "#0f172a",
-        "border": "#475569",
-        "menu_bg": "#334155",
-        "menu_fg": "#e2e8f0",
-        "gradient_start": "#1e293b",
-        "gradient_end": "#0f172a",
-        "glass_bg": "#334155",
-        "glass_border": "#475569",
-        "hover_glow": "#38bdf8"
-    },
-    "snowy": {
-        "bg": "#f8fafc",
-        "tile_bg": "#ffffff",
-        "text": "#334155",
-        "accent": "#94a3b8",
-        "secondary": "#cbd5e1",
-        "warning": "#ef4444",
-        "button": "#ffffff",
-        "button_hover": "#f1f5f9",
-        "shadow": "#e2e8f0",
-        "border": "#cbd5e1",
-        "menu_bg": "#ffffff",
-        "menu_fg": "#334155",
-        "gradient_start": "#f8fafc",
-        "gradient_end": "#f1f5f9",
-        "glass_bg": "#ffffff",
-        "glass_border": "#cbd5e1",
-        "hover_glow": "#94a3b8"
-    }
-}
+from themes import THEMES, WEATHER_THEMES, get_theme_colors, get_weather_theme
 
 # Weather icon mapping (now using images directory)
 WEATHER_ICONS = {
@@ -134,17 +17,6 @@ WEATHER_ICONS = {
     "🌨️": "snowy.png",
     "🌫️": "foggy.png",
     "🌙": "cloudy.png",     # Use cloudy for night as placeholder
-}
-
-# Weather to theme mapping
-WEATHER_THEMES = {
-    "sunny": "sunny",
-    "partly-cloudy": "light",
-    "cloudy": "light",
-    "rainy": "rainy",
-    "stormy": "stormy",
-    "snowy": "snowy",
-    "foggy": "light"
 }
 
 def create_weather_icons():
@@ -190,9 +62,10 @@ def load_weather_icon(weather_icon, theme="light"):
 
 def create_glass_frame(parent, theme="light", app_instance=None, **kwargs):
     """Create a frame with enhanced glass-morphic effect"""
+    colors = get_theme_colors(theme)
     frame = tk.Frame(parent,
-                    bg=THEMES[theme]["glass_bg"],
-                    highlightbackground=THEMES[theme]["glass_border"],
+                    bg=colors["glass_bg"],
+                    highlightbackground=colors["glass_border"],
                     highlightthickness=1,
                     **kwargs)
     
@@ -204,22 +77,24 @@ def create_glass_frame(parent, theme="light", app_instance=None, **kwargs):
     def on_enter(e):
         if not hasattr(frame, '_theme_changing'):
             current_theme = app_instance.current_theme
-            frame.configure(bg=THEMES[current_theme]["button_hover"])
-            frame.configure(highlightbackground=THEMES[current_theme]["accent"])
+            colors = get_theme_colors(current_theme)
+            frame.configure(bg=colors["button_hover"])
+            frame.configure(highlightbackground=colors["accent"])
             # Add a subtle glow effect
             for child in frame.winfo_children():
                 if isinstance(child, (tk.Label, ttk.Label)):
-                    child.configure(foreground=THEMES[current_theme]["accent"])
+                    child.configure(foreground=colors["accent"])
     
     def on_leave(e):
         if not hasattr(frame, '_theme_changing'):
             current_theme = app_instance.current_theme
-            frame.configure(bg=THEMES[current_theme]["glass_bg"])
-            frame.configure(highlightbackground=THEMES[current_theme]["glass_border"])
+            colors = get_theme_colors(current_theme)
+            frame.configure(bg=colors["glass_bg"])
+            frame.configure(highlightbackground=colors["glass_border"])
             # Restore original colors
             for child in frame.winfo_children():
                 if isinstance(child, (tk.Label, ttk.Label)):
-                    child.configure(foreground=THEMES[current_theme]["text"])
+                    child.configure(foreground=colors["text"])
     
     frame.bind("<Enter>", on_enter)
     frame.bind("<Leave>", on_leave)
@@ -234,6 +109,7 @@ def get_weather_for_date(date):
 
 def create_weather_tile(parent, date, column, theme="light", app_instance=None):
     """Create a single weather tile with modern styling and improved image presentation"""
+    colors = get_theme_colors(theme)
     frame = create_glass_frame(parent, theme=theme, app_instance=app_instance, padx=20, pady=20)
     frame.grid(row=0, column=column, padx=20, pady=20, sticky="nsew")
 
@@ -255,7 +131,7 @@ def create_weather_tile(parent, date, column, theme="light", app_instance=None):
     icon_container = tk.Label(
         frame,
         image=icon_image,
-        bg=THEMES[theme]["tile_bg"],
+        bg=colors["glass_bg"],
         bd=0,
         highlightthickness=0
     )
@@ -286,8 +162,7 @@ def create_weather_tile(parent, date, column, theme="light", app_instance=None):
 
     # Add click event to change theme
     def on_tile_click(event):
-        weather_type = weather["description"].lower()
-        theme = WEATHER_THEMES.get(weather_type, "light")
+        theme = get_weather_theme(weather["description"])
         app_instance.change_theme(theme)
 
     frame.bind("<Button-1>", on_tile_click)
@@ -304,7 +179,7 @@ class WeatherApp:
         
         # Initialize with light theme
         self.current_theme = "light"
-        self.colors = THEMES[self.current_theme]
+        self.colors = get_theme_colors(self.current_theme)
         
         # Configure root window
         self.root.configure(bg=self.colors["bg"])
@@ -374,27 +249,27 @@ class WeatherApp:
         
         # Configure styles with glass-morphic effects
         style.configure("Modern.TFrame",
-                       background=self.colors["tile_bg"],
+                       background=self.colors["glass_bg"],
                        relief="flat",
                        borderwidth=0)
         
         style.configure("Modern.TLabel",
-                       background=self.colors["tile_bg"],
+                       background=self.colors["glass_bg"],
                        foreground=self.colors["text"],
                        font=("Segoe UI", 10))
         
         style.configure("Date.TLabel",
-                       background=self.colors["tile_bg"],
+                       background=self.colors["glass_bg"],
                        foreground=self.colors["accent"],
                        font=("Segoe UI", 12, "bold"))
         
         style.configure("Temp.TLabel",
-                       background=self.colors["tile_bg"],
+                       background=self.colors["glass_bg"],
                        foreground=self.colors["text"],
                        font=("Segoe UI", 9))
         
         style.configure("Modern.TButton",
-                       background=self.colors["button"],
+                       background=self.colors["glass_bg"],
                        foreground=self.colors["text"],
                        font=("Segoe UI", 10),
                        padding=10,
@@ -430,7 +305,7 @@ class WeatherApp:
             return
 
         self.current_theme = theme
-        self.colors = THEMES[theme]
+        self.colors = get_theme_colors(theme)
         
         # Update root window with smooth transition
         self.root.configure(bg=self.colors["bg"])
@@ -459,7 +334,7 @@ class WeatherApp:
                 # Update all child widgets
                 for child in widget.winfo_children():
                     if isinstance(child, tk.Label):
-                        child.configure(bg=self.colors["tile_bg"],
+                        child.configure(bg=self.colors["glass_bg"],
                                       fg=self.colors["text"])
                     elif isinstance(child, ttk.Label):
                         child.configure(style="Modern.TLabel")
