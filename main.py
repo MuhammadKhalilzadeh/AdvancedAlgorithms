@@ -3,6 +3,8 @@ from tkinter import ttk
 from datetime import datetime, timedelta
 from weather_data import WEATHER_DATA, MONTHLY_WEATHER
 import calendar
+from PIL import Image, ImageTk
+import os
 
 # Theme color schemes
 THEMES = {
@@ -44,6 +46,59 @@ THEMES = {
     }
 }
 
+# Weather icon mapping (now using images directory)
+WEATHER_ICONS = {
+    "☀️": "sunny.png",
+    "⛅": "cloudy.png",      # Use cloudy for partly cloudy
+    "☁️": "cloudy.png",
+    "🌧️": "rainy.png",
+    "⛈️": "stormy.png",
+    "🌨️": "snowy.png",
+    "🌫️": "foggy.png",
+    "🌙": "cloudy.png",     # Use cloudy for night as placeholder
+}
+
+def create_weather_icons():
+    """Create weather icons if they don't exist"""
+    icons_dir = os.path.join("assets", "icons")
+    os.makedirs(icons_dir, exist_ok=True)
+    
+    # Create a simple weather icon
+    def create_icon(name, color):
+        img = Image.new('RGBA', (64, 64), (0, 0, 0, 0))
+        # Draw a simple circle for the icon
+        from PIL import ImageDraw
+        draw = ImageDraw.Draw(img)
+        draw.ellipse([12, 12, 52, 52], fill=color)
+        img.save(os.path.join(icons_dir, f"{name}.png"))
+    
+    # Create icons for each weather type
+    create_icon("sunny", "#FFD700")  # Gold
+    create_icon("partly-cloudy", "#E2E8F0")  # Light gray
+    create_icon("cloudy", "#CBD5E1")  # Gray
+    create_icon("rainy", "#3B82F6")  # Blue
+    create_icon("stormy", "#475569")  # Dark gray
+    create_icon("snowy", "#94A3B8")  # Light blue
+    create_icon("foggy", "#E2E8F0")  # Light gray
+
+def load_weather_icon(weather_icon, theme="light"):
+    """Load and resize weather icon, fallback to a generated placeholder if missing"""
+    icon_name = WEATHER_ICONS.get(weather_icon, "sunny.png")
+    icon_path = os.path.join("assets", "images", icon_name)
+    if not os.path.exists(icon_path):
+        # Fallback to sunny.png if the specific icon is missing
+        icon_path = os.path.join("assets", "images", "sunny.png")
+    if not os.path.exists(icon_path):
+        # If even sunny.png is missing, create a placeholder image in memory
+        from PIL import ImageDraw
+        img = Image.new('RGBA', (64, 64), (200, 200, 200, 255))
+        draw = ImageDraw.Draw(img)
+        draw.ellipse([8, 8, 56, 56], fill=(255, 215, 0, 255))  # yellow circle
+        return ImageTk.PhotoImage(img)
+    img = Image.open(icon_path)
+    img = img.resize((64, 64), Image.Resampling.LANCZOS)
+    return ImageTk.PhotoImage(img)
+
 def create_glass_frame(parent, theme="light", **kwargs):
     """Create a frame with glass-morphic effect"""
     frame = tk.Frame(parent,
@@ -65,49 +120,57 @@ def get_weather_for_date(date):
     return WEATHER_DATA[weather_type]
 
 def create_weather_tile(parent, date, column, theme="light"):
-    """Create a single weather tile with modern styling"""
-    frame = create_glass_frame(parent, theme=theme, padx=15, pady=15)
-    frame.grid(row=0, column=column, padx=15, pady=15, sticky="nsew")
-    
+    """Create a single weather tile with modern styling and improved image presentation"""
+    frame = create_glass_frame(parent, theme=theme, padx=20, pady=20)
+    frame.grid(row=0, column=column, padx=20, pady=20, sticky="nsew")
+
     # Add date label with accent color
-    date_label = ttk.Label(frame, 
-                          text=date.strftime("%a\n%d %b"),
-                          style="Date.TLabel")
-    date_label.pack(pady=10)
-    
+    date_label = ttk.Label(
+        frame,
+        text=date.strftime("%a\n%d %b"),
+        style="Date.TLabel",
+        anchor="center",
+        font=("Segoe UI", 13, "bold")
+    )
+    date_label.pack(pady=(5, 10))
+
     # Get weather data
     weather = get_weather_for_date(date)
-    
-    # Add weather icon with larger size
-    weather_icon = ttk.Label(frame, 
-                            text=weather["icon"],
-                            style="Icon.TLabel")
-    weather_icon.pack(pady=10)
-    
-    # Add weather description
-    desc_label = ttk.Label(frame, 
-                          text=weather["description"],
-                          style="Modern.TLabel")
-    desc_label.pack(pady=5)
-    
-    # Add temperature labels with modern styling
+
+    # Add weather image (centered, with a subtle border/shadow)
+    icon_image = load_weather_icon(weather["icon"], theme)
+    icon_container = tk.Label(
+        frame,
+        image=icon_image,
+        bg=THEMES[theme]["tile_bg"],
+        bd=0,
+        highlightthickness=0
+    )
+    icon_container.image = icon_image  # Keep a reference
+    icon_container.pack(pady=(0, 10))
+
+    # Add weather description (centered, modern font)
+    desc_label = ttk.Label(
+        frame,
+        text=weather["description"],
+        style="Modern.TLabel",
+        anchor="center",
+        font=("Segoe UI", 11, "bold")
+    )
+    desc_label.pack(pady=(0, 8))
+
+    # Add temperature labels with modern styling and spacing
     temp_frame = ttk.Frame(frame, style="Modern.TFrame")
-    temp_frame.pack(pady=10)
-    
-    min_temp = ttk.Label(temp_frame, 
-                        text=f"Min: {weather['temp_range']['min']}°C",
-                        style="Temp.TLabel")
-    avg_temp = ttk.Label(temp_frame, 
-                        text=f"Avg: {weather['temp_range']['avg']}°C",
-                        style="Temp.TLabel")
-    max_temp = ttk.Label(temp_frame, 
-                        text=f"Max: {weather['temp_range']['max']}°C",
-                        style="Temp.TLabel")
-    
-    min_temp.pack(pady=2)
-    avg_temp.pack(pady=2)
-    max_temp.pack(pady=2)
-    
+    temp_frame.pack(pady=(0, 5))
+
+    min_temp = ttk.Label(temp_frame, text=f"Min: {weather['temp_range']['min']}°C", style="Temp.TLabel", font=("Segoe UI", 10))
+    avg_temp = ttk.Label(temp_frame, text=f"Avg: {weather['temp_range']['avg']}°C", style="Temp.TLabel", font=("Segoe UI", 10, "bold"))
+    max_temp = ttk.Label(temp_frame, text=f"Max: {weather['temp_range']['max']}°C", style="Temp.TLabel", font=("Segoe UI", 10))
+
+    min_temp.pack(pady=1)
+    avg_temp.pack(pady=1)
+    max_temp.pack(pady=1)
+
     return frame
 
 class WeatherApp:
@@ -200,11 +263,6 @@ class WeatherApp:
                        background=self.colors["tile_bg"],
                        foreground=self.colors["accent"],
                        font=("Segoe UI", 12, "bold"))
-        
-        style.configure("Icon.TLabel",
-                       background=self.colors["tile_bg"],
-                       foreground=self.colors["secondary"],
-                       font=("Segoe UI", 24))
         
         style.configure("Temp.TLabel",
                        background=self.colors["tile_bg"],
@@ -311,7 +369,7 @@ class WeatherApp:
 
 def main():
     root = tk.Tk()
-    WeatherApp(root)  # Removed unused variable
+    WeatherApp(root)
     root.mainloop()
 
 if __name__ == "__main__":
