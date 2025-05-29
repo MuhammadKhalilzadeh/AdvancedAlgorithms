@@ -24,7 +24,8 @@ THEMES = {
         "gradient_start": "#f0f9ff",
         "gradient_end": "#e0f2fe",
         "glass_bg": "#ffffff",
-        "glass_border": "#e2e8f0"
+        "glass_border": "#e2e8f0",
+        "hover_glow": "#3b82f6"
     },
     "dark": {
         "bg": "#0f172a",
@@ -42,7 +43,8 @@ THEMES = {
         "gradient_start": "#1e293b",
         "gradient_end": "#0f172a",
         "glass_bg": "#1e293b",
-        "glass_border": "#334155"
+        "glass_border": "#334155",
+        "hover_glow": "#38bdf8"
     },
     "sunny": {
         "bg": "#fff7ed",
@@ -60,7 +62,8 @@ THEMES = {
         "gradient_start": "#fff7ed",
         "gradient_end": "#ffedd5",
         "glass_bg": "#ffffff",
-        "glass_border": "#fdba74"
+        "glass_border": "#fdba74",
+        "hover_glow": "#ea580c"
     },
     "rainy": {
         "bg": "#f1f5f9",
@@ -78,7 +81,8 @@ THEMES = {
         "gradient_start": "#f1f5f9",
         "gradient_end": "#e2e8f0",
         "glass_bg": "#ffffff",
-        "glass_border": "#cbd5e1"
+        "glass_border": "#cbd5e1",
+        "hover_glow": "#0ea5e9"
     },
     "stormy": {
         "bg": "#1e293b",
@@ -96,7 +100,8 @@ THEMES = {
         "gradient_start": "#1e293b",
         "gradient_end": "#0f172a",
         "glass_bg": "#334155",
-        "glass_border": "#475569"
+        "glass_border": "#475569",
+        "hover_glow": "#38bdf8"
     },
     "snowy": {
         "bg": "#f8fafc",
@@ -114,7 +119,8 @@ THEMES = {
         "gradient_start": "#f8fafc",
         "gradient_end": "#f1f5f9",
         "glass_bg": "#ffffff",
-        "glass_border": "#cbd5e1"
+        "glass_border": "#cbd5e1",
+        "hover_glow": "#94a3b8"
     }
 }
 
@@ -182,8 +188,8 @@ def load_weather_icon(weather_icon, theme="light"):
     img = img.resize((64, 64), Image.Resampling.LANCZOS)
     return ImageTk.PhotoImage(img)
 
-def create_glass_frame(parent, theme="light", **kwargs):
-    """Create a frame with glass-morphic effect"""
+def create_glass_frame(parent, theme="light", app_instance=None, **kwargs):
+    """Create a frame with enhanced glass-morphic effect"""
     frame = tk.Frame(parent,
                     bg=THEMES[theme]["glass_bg"],
                     highlightbackground=THEMES[theme]["glass_border"],
@@ -193,6 +199,30 @@ def create_glass_frame(parent, theme="light", **kwargs):
     # Add shadow effect
     frame.configure(relief="flat")
     frame.bind("<Map>", lambda e: frame.configure(relief="flat"))
+    
+    # Add hover effect
+    def on_enter(e):
+        if not hasattr(frame, '_theme_changing'):
+            current_theme = app_instance.current_theme
+            frame.configure(bg=THEMES[current_theme]["button_hover"])
+            frame.configure(highlightbackground=THEMES[current_theme]["accent"])
+            # Add a subtle glow effect
+            for child in frame.winfo_children():
+                if isinstance(child, (tk.Label, ttk.Label)):
+                    child.configure(foreground=THEMES[current_theme]["accent"])
+    
+    def on_leave(e):
+        if not hasattr(frame, '_theme_changing'):
+            current_theme = app_instance.current_theme
+            frame.configure(bg=THEMES[current_theme]["glass_bg"])
+            frame.configure(highlightbackground=THEMES[current_theme]["glass_border"])
+            # Restore original colors
+            for child in frame.winfo_children():
+                if isinstance(child, (tk.Label, ttk.Label)):
+                    child.configure(foreground=THEMES[current_theme]["text"])
+    
+    frame.bind("<Enter>", on_enter)
+    frame.bind("<Leave>", on_leave)
     
     return frame
 
@@ -204,7 +234,7 @@ def get_weather_for_date(date):
 
 def create_weather_tile(parent, date, column, theme="light", app_instance=None):
     """Create a single weather tile with modern styling and improved image presentation"""
-    frame = create_glass_frame(parent, theme=theme, padx=20, pady=20)
+    frame = create_glass_frame(parent, theme=theme, app_instance=app_instance, padx=20, pady=20)
     frame.grid(row=0, column=column, padx=20, pady=20, sticky="nsew")
 
     # Add date label with accent color
@@ -302,7 +332,7 @@ class WeatherApp:
         self.main_container = ttk.Frame(root, style="Modern.TFrame")
         self.main_container.pack(fill="both", expand=True)
         
-        # Create canvas for scrolling
+        # Create canvas for scrolling with gradient background
         self.canvas = tk.Canvas(self.main_container, 
                               bg=self.colors["bg"],
                               highlightthickness=0)
@@ -342,7 +372,7 @@ class WeatherApp:
         style = ttk.Style()
         style.theme_use('clam')
         
-        # Configure styles
+        # Configure styles with glass-morphic effects
         style.configure("Modern.TFrame",
                        background=self.colors["tile_bg"],
                        relief="flat",
@@ -367,10 +397,13 @@ class WeatherApp:
                        background=self.colors["button"],
                        foreground=self.colors["text"],
                        font=("Segoe UI", 10),
-                       padding=10)
+                       padding=10,
+                       relief="flat",
+                       borderwidth=0)
         
         style.map("Modern.TButton",
-                  background=[("active", self.colors["button_hover"])])
+                  background=[("active", self.colors["button_hover"])],
+                  foreground=[("active", self.colors["accent"])])
     
     def create_menu(self):
         """Create the menu bar"""
@@ -419,21 +452,32 @@ class WeatherApp:
         # Update all tiles with smooth transition
         for widget in self.scrollable_frame.winfo_children():
             if isinstance(widget, tk.Frame):
+                # Reset hover state
                 widget.configure(bg=self.colors["glass_bg"],
                                highlightbackground=self.colors["glass_border"])
+                
+                # Update all child widgets
                 for child in widget.winfo_children():
                     if isinstance(child, tk.Label):
-                        child.configure(bg=self.colors["tile_bg"])
+                        child.configure(bg=self.colors["tile_bg"],
+                                      fg=self.colors["text"])
                     elif isinstance(child, ttk.Label):
                         child.configure(style="Modern.TLabel")
                     elif isinstance(child, ttk.Frame):
                         child.configure(style="Modern.TFrame")
+                        # Update temperature labels
+                        for temp_label in child.winfo_children():
+                            if isinstance(temp_label, ttk.Label):
+                                temp_label.configure(style="Temp.TLabel")
         
         # Update see more button
         for widget in self.main_container.winfo_children():
             if isinstance(widget, tk.Frame):
+                # Reset hover state
                 widget.configure(bg=self.colors["glass_bg"],
                                highlightbackground=self.colors["glass_border"])
+                
+                # Update button
                 for child in widget.winfo_children():
                     if isinstance(child, ttk.Button):
                         child.configure(style="Modern.TButton")
@@ -449,9 +493,9 @@ class WeatherApp:
             create_weather_tile(self.scrollable_frame, date, i, theme=self.current_theme, app_instance=self)
     
     def create_see_more_button(self):
-        """Create see more button"""
+        """Create see more button with glass-morphic effect"""
         # Create a frame that matches the height of weather tiles
-        button_frame = create_glass_frame(self.main_container, theme=self.current_theme, padx=15, pady=15)
+        button_frame = create_glass_frame(self.main_container, theme=self.current_theme, app_instance=self, padx=15, pady=15)
         button_frame.pack(side="right", padx=15, pady=15)
         
         # Create the button
