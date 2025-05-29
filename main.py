@@ -43,6 +43,78 @@ THEMES = {
         "gradient_end": "#0f172a",
         "glass_bg": "#1e293b",
         "glass_border": "#334155"
+    },
+    "sunny": {
+        "bg": "#fff7ed",
+        "tile_bg": "#ffffff",
+        "text": "#431407",
+        "accent": "#ea580c",
+        "secondary": "#f97316",
+        "warning": "#ef4444",
+        "button": "#ffffff",
+        "button_hover": "#fff7ed",
+        "shadow": "#fed7aa",
+        "border": "#fdba74",
+        "menu_bg": "#ffffff",
+        "menu_fg": "#431407",
+        "gradient_start": "#fff7ed",
+        "gradient_end": "#ffedd5",
+        "glass_bg": "#ffffff",
+        "glass_border": "#fdba74"
+    },
+    "rainy": {
+        "bg": "#f1f5f9",
+        "tile_bg": "#ffffff",
+        "text": "#1e293b",
+        "accent": "#0ea5e9",
+        "secondary": "#38bdf8",
+        "warning": "#ef4444",
+        "button": "#ffffff",
+        "button_hover": "#f1f5f9",
+        "shadow": "#e2e8f0",
+        "border": "#cbd5e1",
+        "menu_bg": "#ffffff",
+        "menu_fg": "#1e293b",
+        "gradient_start": "#f1f5f9",
+        "gradient_end": "#e2e8f0",
+        "glass_bg": "#ffffff",
+        "glass_border": "#cbd5e1"
+    },
+    "stormy": {
+        "bg": "#1e293b",
+        "tile_bg": "#334155",
+        "text": "#e2e8f0",
+        "accent": "#38bdf8",
+        "secondary": "#818cf8",
+        "warning": "#f87171",
+        "button": "#334155",
+        "button_hover": "#475569",
+        "shadow": "#0f172a",
+        "border": "#475569",
+        "menu_bg": "#334155",
+        "menu_fg": "#e2e8f0",
+        "gradient_start": "#1e293b",
+        "gradient_end": "#0f172a",
+        "glass_bg": "#334155",
+        "glass_border": "#475569"
+    },
+    "snowy": {
+        "bg": "#f8fafc",
+        "tile_bg": "#ffffff",
+        "text": "#334155",
+        "accent": "#94a3b8",
+        "secondary": "#cbd5e1",
+        "warning": "#ef4444",
+        "button": "#ffffff",
+        "button_hover": "#f1f5f9",
+        "shadow": "#e2e8f0",
+        "border": "#cbd5e1",
+        "menu_bg": "#ffffff",
+        "menu_fg": "#334155",
+        "gradient_start": "#f8fafc",
+        "gradient_end": "#f1f5f9",
+        "glass_bg": "#ffffff",
+        "glass_border": "#cbd5e1"
     }
 }
 
@@ -56,6 +128,17 @@ WEATHER_ICONS = {
     "🌨️": "snowy.png",
     "🌫️": "foggy.png",
     "🌙": "cloudy.png",     # Use cloudy for night as placeholder
+}
+
+# Weather to theme mapping
+WEATHER_THEMES = {
+    "sunny": "sunny",
+    "partly-cloudy": "light",
+    "cloudy": "light",
+    "rainy": "rainy",
+    "stormy": "stormy",
+    "snowy": "snowy",
+    "foggy": "light"
 }
 
 def create_weather_icons():
@@ -119,7 +202,7 @@ def get_weather_for_date(date):
     weather_type = MONTHLY_WEATHER[day_index]
     return WEATHER_DATA[weather_type]
 
-def create_weather_tile(parent, date, column, theme="light"):
+def create_weather_tile(parent, date, column, theme="light", app_instance=None):
     """Create a single weather tile with modern styling and improved image presentation"""
     frame = create_glass_frame(parent, theme=theme, padx=20, pady=20)
     frame.grid(row=0, column=column, padx=20, pady=20, sticky="nsew")
@@ -170,6 +253,17 @@ def create_weather_tile(parent, date, column, theme="light"):
     min_temp.pack(pady=1)
     avg_temp.pack(pady=1)
     max_temp.pack(pady=1)
+
+    # Add click event to change theme
+    def on_tile_click(event):
+        weather_type = weather["description"].lower()
+        theme = WEATHER_THEMES.get(weather_type, "light")
+        app_instance.change_theme(theme)
+
+    frame.bind("<Button-1>", on_tile_click)
+    # Also bind to all child widgets to ensure the click event is captured
+    for child in frame.winfo_children():
+        child.bind("<Button-1>", on_tile_click)
 
     return frame
 
@@ -298,14 +392,17 @@ class WeatherApp:
         theme_menu.add_command(label="Exit", command=self.root.quit)
     
     def change_theme(self, theme):
-        """Change the application theme"""
+        """Change the application theme with smooth transition"""
+        if theme == self.current_theme:
+            return
+
         self.current_theme = theme
         self.colors = THEMES[theme]
         
-        # Update root window
+        # Update root window with smooth transition
         self.root.configure(bg=self.colors["bg"])
         
-        # Update canvas
+        # Update canvas with smooth transition
         self.canvas.configure(bg=self.colors["bg"])
         
         # Update menu colors
@@ -319,16 +416,27 @@ class WeatherApp:
         # Reapply styles
         self.apply_modern_style()
         
-        # Recreate all tiles
+        # Update all tiles with smooth transition
         for widget in self.scrollable_frame.winfo_children():
-            widget.destroy()
-        self.create_initial_tiles()
+            if isinstance(widget, tk.Frame):
+                widget.configure(bg=self.colors["glass_bg"],
+                               highlightbackground=self.colors["glass_border"])
+                for child in widget.winfo_children():
+                    if isinstance(child, tk.Label):
+                        child.configure(bg=self.colors["tile_bg"])
+                    elif isinstance(child, ttk.Label):
+                        child.configure(style="Modern.TLabel")
+                    elif isinstance(child, ttk.Frame):
+                        child.configure(style="Modern.TFrame")
         
-        # Recreate see more button
+        # Update see more button
         for widget in self.main_container.winfo_children():
             if isinstance(widget, tk.Frame):
-                widget.destroy()
-        self.create_see_more_button()
+                widget.configure(bg=self.colors["glass_bg"],
+                               highlightbackground=self.colors["glass_border"])
+                for child in widget.winfo_children():
+                    if isinstance(child, ttk.Button):
+                        child.configure(style="Modern.TButton")
     
     def _on_mousewheel(self, event):
         """Handle mouse wheel scrolling"""
@@ -338,7 +446,7 @@ class WeatherApp:
         """Create initial 7 weather tiles"""
         for i in range(7):
             date = self.current_date + timedelta(days=i)
-            create_weather_tile(self.scrollable_frame, date, i, theme=self.current_theme)
+            create_weather_tile(self.scrollable_frame, date, i, theme=self.current_theme, app_instance=self)
     
     def create_see_more_button(self):
         """Create see more button"""
@@ -361,7 +469,7 @@ class WeatherApp:
         # Create tiles for remaining days
         for i in range(7, self.days_in_month):
             date = self.current_date + timedelta(days=i)
-            create_weather_tile(self.scrollable_frame, date, i, theme=self.current_theme)
+            create_weather_tile(self.scrollable_frame, date, i, theme=self.current_theme, app_instance=self)
         
         # Update button text
         self.see_more.configure(text="All Days Shown")
