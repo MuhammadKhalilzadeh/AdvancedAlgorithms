@@ -26,6 +26,97 @@ def weather_to_image(day):
     else:
         return "sunny.png"
 
+# Add a global variable to track the news_frame
+_news_frame = None
+
+def show_news_view():
+    global _today_frame, _news_frame
+    # Destroy other frames if they exist
+    if _today_frame is not None:
+        _today_frame.destroy()
+        _today_frame = None
+    if _news_frame is not None:
+        _news_frame.destroy()
+    main_frame.pack_forget()
+    cards_frame.pack_forget()
+    # Create news frame
+    news_frame = tk.Frame(root, bg='#f5f5f5')
+    news_frame.pack(fill=tk.BOTH, expand=True)
+    _news_frame = news_frame
+    # Load news data
+    with open('news_data.json', 'r', encoding='utf-8') as f:
+        news_data = json.load(f)
+    print(f"Loaded {len(news_data)} news items from news_data.json")
+    # Title
+    tk.Label(news_frame, text="News of the Day", font=('Helvetica', 26, 'bold'), bg='#f5f5f5', fg='#222').pack(pady=(30, 10))
+    # Responsive grid area
+    grid_canvas = tk.Canvas(news_frame, bg='#f5f5f5', highlightthickness=0, bd=0)
+    grid_scrollbar = tk.Scrollbar(news_frame, orient="vertical", command=grid_canvas.yview)
+    grid_frame = tk.Frame(grid_canvas, bg='#f5f5f5')
+    grid_frame_id = grid_canvas.create_window((0, 0), window=grid_frame, anchor="nw")
+    def on_grid_configure(event):
+        grid_canvas.configure(scrollregion=grid_canvas.bbox("all"))
+        grid_canvas.itemconfig(grid_frame_id, width=grid_canvas.winfo_width())
+    grid_frame.bind("<Configure>", on_grid_configure)
+    grid_canvas.configure(yscrollcommand=grid_scrollbar.set)
+    grid_canvas.pack(side="left", fill="both", expand=True, padx=(0,0), pady=(0,0))
+    grid_scrollbar.pack(side="right", fill="y")
+    # Responsive grid logic
+    def render_news_grid():
+        for widget in grid_frame.winfo_children():
+            widget.destroy()
+        width = news_frame.winfo_width() or 800
+        num_columns = 2 if width > 700 else 1
+        card_width = (width - 80) // num_columns if num_columns > 1 else width - 60
+        if not news_data:
+            tk.Label(grid_frame, text="No news available", font=('Helvetica', 14), bg='#f5f5f5', fg='#888').pack(pady=40)
+        else:
+            for i, news in enumerate(news_data):
+                row = i // num_columns
+                col = i % num_columns
+                card_outer = tk.Frame(grid_frame, bg='#f5f5f5')
+                card_outer.grid(row=row, column=col, padx=16, pady=16, sticky="nsew")
+                # Shadow
+                shadow = tk.Frame(card_outer, bg='#e0e0e0', bd=0, highlightthickness=0)
+                shadow.place(relx=0, rely=0, x=8, y=8, relwidth=1, relheight=1)
+                # Card
+                card = tk.Frame(card_outer, bg='white', bd=0, highlightthickness=0)
+                card.place(relx=0, rely=0, relwidth=1, relheight=1)
+                card.config(width=card_width, height=160)
+                card.pack_propagate(False)
+                card.lift()
+                # Title
+                tk.Label(card, text=news['title'], font=('Helvetica', 15, 'bold'), bg='white', fg='#222', wraplength=card_width-32, justify='left').pack(anchor='w', pady=(18, 2), padx=18)
+                # Date
+                tk.Label(card, text=news['date'], font=('Helvetica', 10), bg='white', fg='#888').pack(anchor='w', padx=18)
+                # Summary
+                tk.Label(card, text=news['summary'], font=('Helvetica', 12), bg='white', fg='#444', wraplength=card_width-32, justify='left').pack(anchor='w', pady=(6, 16), padx=18)
+        for c in range(num_columns):
+            grid_frame.grid_columnconfigure(c, weight=1)
+    # Bind resize event for responsiveness
+    def on_news_resize(event):
+        render_news_grid()
+    news_frame.bind('<Configure>', on_news_resize)
+    render_news_grid()
+    # Back to Main button
+    def back_to_main():
+        if _news_frame is not None:
+            _news_frame.destroy()
+        show_upcoming_days()
+    back_button = tk.Button(news_frame, text="Back to Main", 
+                          command=back_to_main,
+                          font=('Helvetica', 12, 'bold'),
+                          bg='#FFD700',
+                          fg='#222',
+                          activebackground='#FFA500',
+                          activeforeground='white',
+                          relief='flat',
+                          bd=0,
+                          padx=18,
+                          pady=8,
+                          cursor='hand2')
+    back_button.pack(pady=(10, 30))
+
 # Load forecast data
 with open('forcast_data.json', 'r', encoding='utf-8') as f:
     forecast_data = json.load(f)
@@ -95,7 +186,6 @@ sections_menu = tk.Menu(menubar, tearoff=0)
 menubar.add_cascade(label="Sections", menu=sections_menu)
 sections_menu.add_command(label="Today", command=lambda: show_today_view())
 sections_menu.add_command(label="Upcoming days", command=lambda: show_upcoming_days())
-sections_menu.add_command(label="News")
 
 # Create a container frame for side-by-side layout
 container_frame = tk.Frame(scrollable_frame)
