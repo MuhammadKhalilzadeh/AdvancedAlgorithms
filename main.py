@@ -1,117 +1,200 @@
 import tkinter as tk
-from tkinter import ttk
-from datetime import datetime
-import calendar
-from themes import get_theme_colors
-from weather_section import create_weather_section
-from news_section import create_news_section
-from styles import apply_modern_style
+import json
+import os
+from tkinter import PhotoImage
 
-def create_menu(root, app_state):
-    menubar = tk.Menu(root, bg=app_state["colors"]["menu_bg"], fg=app_state["colors"]["menu_fg"])
-    root.config(menu=menubar)
-    
-    theme_menu = tk.Menu(menubar, tearoff=0, bg=app_state["colors"]["menu_bg"], fg=app_state["colors"]["menu_fg"])
-    menubar.add_cascade(label="Theme", menu=theme_menu)
-    
-    theme_menu.add_command(label="Light", command=lambda: change_theme("light", app_state))
-    theme_menu.add_command(label="Dark", command=lambda: change_theme("dark", app_state))
-    
-    theme_menu.add_separator()
-    theme_menu.add_command(label="Exit", command=root.quit)
+# Load forecast data
+with open('forcast_data.json', 'r') as f:
+    forecast_data = json.load(f)
 
-def change_theme(theme, app_state):
-    if theme == app_state["current_theme"]:
-        return
+# Create the main window
+root = tk.Tk()
 
-    app_state["current_theme"] = theme
-    app_state["colors"] = get_theme_colors(theme)
-    
-    app_state["root"].configure(bg=app_state["colors"]["bg"])
-    
-    for widget in app_state["main_container"].winfo_children():
-        if isinstance(widget, ttk.Frame):
-            widget.configure(style="Modern.TFrame")
-            for child in widget.winfo_children():
-                if isinstance(child, ttk.Frame):
-                    child.configure(style="Modern.TFrame")
-                    for grandchild in child.winfo_children():
-                        if isinstance(grandchild, (tk.Frame, ttk.Frame)):
-                            grandchild.configure(style="Modern.TFrame")
-    
-    app_state["canvas"].configure(bg=app_state["colors"]["bg"])
-    
-    for menu in app_state["root"].winfo_children():
-        if isinstance(menu, tk.Menu):
-            menu.configure(bg=app_state["colors"]["menu_bg"], fg=app_state["colors"]["menu_fg"])
-            for submenu in menu.winfo_children():
-                if isinstance(submenu, tk.Menu):
-                    submenu.configure(bg=app_state["colors"]["menu_bg"], fg=app_state["colors"]["menu_fg"])
-    
-    apply_modern_style(app_state)
-    
-    for widget in app_state["scrollable_frame"].winfo_children():
-        if isinstance(widget, tk.Frame):
-            widget.configure(bg=app_state["colors"]["bg"],
-                           highlightbackground=app_state["colors"]["glass_border"])
-            
-            for child in widget.winfo_children():
-                if isinstance(child, tk.Label):
-                    child.configure(bg=app_state["colors"]["bg"],
-                                  fg=app_state["colors"]["text"])
-                elif isinstance(child, ttk.Label):
-                    child.configure(style="Modern.TLabel")
-                elif isinstance(child, ttk.Frame):
-                    child.configure(style="Modern.TFrame")
-                    for temp_label in child.winfo_children():
-                        if isinstance(temp_label, ttk.Label):
-                            temp_label.configure(style="Temp.TLabel")
+# Set window title
+root.title("Weather's by Mohammad Khalilzadeh")
 
-def on_mousewheel(event, canvas):
-    canvas.xview_scroll(int(-1*(event.delta/120)), "units")
+# Set window size to 600x400
+root.geometry("600x400")
 
-def init_app():
-    root = tk.Tk()
-    root.title("Weather & News Dashboard")
-    
-    app_state = {
-        "root": root,
-        "current_theme": "light",
-        "colors": get_theme_colors("light"),
-        "current_date": datetime.now(),
-        "days_in_month": calendar.monthrange(datetime.now().year, datetime.now().month)[1],
-        "remaining_days": calendar.monthrange(datetime.now().year, datetime.now().month)[1] - datetime.now().day + 1,
-        "change_theme": lambda theme: change_theme(theme, app_state)
-    }
-    
-    root.configure(bg=app_state["colors"]["bg"])
-    
-    window_width = 1200
-    window_height = 800
-    screen_width = root.winfo_screenwidth()
-    screen_height = root.winfo_screenheight()
-    
-    x = (screen_width - window_width) // 2
-    y = (screen_height - window_height) // 2
-    
-    root.geometry(f"{window_width}x{window_height}+{x}+{y}")
-    
-    create_menu(root, app_state)
-    apply_modern_style(app_state)
-    
-    app_state["main_container"] = ttk.Frame(root, style="Modern.TFrame")
-    app_state["main_container"].pack(fill="both", expand=True)
-    
-    create_weather_section(app_state["main_container"], app_state)
-    create_news_section(app_state["main_container"], app_state)
-    
-    app_state["canvas"].bind_all("<MouseWheel>", lambda e: on_mousewheel(e, app_state["canvas"]))
-    
-    return root
+# Create main frame with scrollbar
+main_frame = tk.Frame(root)
+main_frame.pack(fill=tk.BOTH, expand=True)
 
-def main():
-    root = init_app()
-    root.mainloop()
+# Create canvas and scrollbar
+canvas = tk.Canvas(main_frame)
+scrollbar = tk.Scrollbar(main_frame, orient="vertical", command=canvas.yview)
+scrollable_frame = tk.Frame(canvas)
 
-if __name__ == "__main__":
-    main()
+# Configure canvas
+scrollable_frame.bind(
+    "<Configure>",
+    lambda e: canvas.configure(scrollregion=canvas.bbox("all"))
+)
+canvas.create_window((0, 0), window=scrollable_frame, anchor="nw")
+canvas.configure(yscrollcommand=scrollbar.set)
+
+# Pack scrollbar and canvas
+scrollbar.pack(side="right", fill="y")
+canvas.pack(side="left", fill="both", expand=True)
+
+# Create menu bar
+menubar = tk.Menu(root)
+root.config(menu=menubar)
+
+# Create Controls menu
+controls_menu = tk.Menu(menubar, tearoff=0)
+menubar.add_cascade(label="Controls", menu=controls_menu)
+
+# Add theme submenu
+theme_menu = tk.Menu(controls_menu, tearoff=0)
+controls_menu.add_cascade(label="Theme", menu=theme_menu)
+theme_menu.add_command(label="Light")
+theme_menu.add_command(label="Dark")
+
+# Add exit option
+controls_menu.add_separator()
+controls_menu.add_command(label="Exit", command=root.quit)
+
+# Create Sections menu
+sections_menu = tk.Menu(menubar, tearoff=0)
+menubar.add_cascade(label="Sections", menu=sections_menu)
+sections_menu.add_command(label="Today")
+sections_menu.add_command(label="Upcoming days")
+sections_menu.add_command(label="News")
+
+# Create a container frame for side-by-side layout
+container_frame = tk.Frame(scrollable_frame)
+container_frame.pack(padx=20, pady=20, fill="both", expand=True)
+
+# Create a frame for city selection
+city_frame = tk.LabelFrame(container_frame, text="Select City", padx=10, pady=10)
+city_frame.pack(side="left", padx=(0, 10), fill="both", expand=True)
+
+# Variable to store the selected city
+selected_city = tk.StringVar(value="Tehran")  # Default selection
+
+# Create radio buttons for each city
+cities = ["Qazvin", "Tehran", "Karaj", "Zanjan"]
+for city in cities:
+    tk.Radiobutton(
+        city_frame,
+        text=city,
+        variable=selected_city,
+        value=city,
+        padx=10,
+        pady=5,
+        command=lambda: update_cards()
+    ).pack(anchor="w")
+
+# Create a frame for weather parameters
+weather_frame = tk.LabelFrame(container_frame, text="Weather Parameters", padx=10, pady=10)
+weather_frame.pack(side="left", fill="both", expand=True)
+
+# Dictionary to store checkbox variables
+weather_vars = {}
+
+# Create checkboxes for each weather parameter
+weather_params = [
+    "Temperature",
+    "Atmospheric Pressure",
+    "Humidity",
+    "Precipitation",
+    "Wind",
+    "Cloud Cover",
+    "UV Index",
+    "Air Quality Index (AQI)"
+]
+
+# Create two columns for checkboxes
+left_column = tk.Frame(weather_frame)
+left_column.pack(side="left", fill="both", expand=True)
+right_column = tk.Frame(weather_frame)
+right_column.pack(side="left", fill="both", expand=True)
+
+# Distribute checkboxes between columns
+def on_param_change():
+    update_cards()
+
+for i, param in enumerate(weather_params):
+    weather_vars[param] = tk.BooleanVar(value=True)
+    column = left_column if i < len(weather_params) // 2 else right_column
+    tk.Checkbutton(
+        column,
+        text=param,
+        variable=weather_vars[param],
+        padx=10,
+        pady=5,
+        command=on_param_change
+    ).pack(anchor="w")
+
+# --- Cards Section ---
+cards_frame = tk.Frame(scrollable_frame)
+cards_frame.pack(fill="x", padx=20, pady=(0, 20))
+
+# Keep references to PhotoImage to avoid garbage collection
+image_cache = {}
+
+def get_avatar_image(filename):
+    if filename not in image_cache:
+        path = os.path.join("images", filename)
+        if os.path.exists(path):
+            image_cache[filename] = PhotoImage(file=path)
+        else:
+            image_cache[filename] = None
+    return image_cache[filename]
+
+def update_cards():
+    # Clear previous cards
+    for widget in cards_frame.winfo_children():
+        widget.destroy()
+    city = selected_city.get()
+    params = [p for p in weather_params if weather_vars[p].get()]
+    days = forecast_data["cities"][city]["forecast"]
+    for day in days:
+        card = tk.Frame(cards_frame, bd=2, relief="groove", padx=10, pady=10)
+        card.pack(fill="x", pady=5)
+        # Avatar
+        avatar_img = get_avatar_image(day.get("avatar", ""))
+        if avatar_img:
+            tk.Label(card, image=avatar_img).pack(side="left", padx=10)
+        # Info
+        info_frame = tk.Frame(card)
+        info_frame.pack(side="left", fill="x", expand=True)
+        tk.Label(info_frame, text=day["date"], font=("Arial", 10, "bold")).pack(anchor="w")
+        for param in params:
+            key = param.lower().replace(" ", "_").replace("(aqi)", "air_quality")
+            value = day
+            # Map param to correct key in JSON
+            if param == "Temperature":
+                v = value["temperature"]
+                text = f"Temperature: {v['current']}°{v['unit']} (min: {v['min']}, max: {v['max']})"
+            elif param == "Atmospheric Pressure":
+                v = value["atmospheric_pressure"]
+                text = f"Pressure: {v['value']} {v['unit']}"
+            elif param == "Humidity":
+                v = value["humidity"]
+                text = f"Humidity: {v['value']}{v['unit']}"
+            elif param == "Precipitation":
+                v = value["precipitation"]
+                text = f"Precipitation: {v['value']} {v['unit']} (prob: {v['probability']}%)"
+            elif param == "Wind":
+                v = value["wind"]
+                text = f"Wind: {v['speed']} {v['unit']} {v['direction']}"
+            elif param == "Cloud Cover":
+                v = value["cloud_cover"]
+                text = f"Cloud Cover: {v['value']}{v['unit']}"
+            elif param == "UV Index":
+                v = value["uv_index"]
+                text = f"UV Index: {v['value']} ({v['risk_level']})"
+            elif param == "Air Quality Index (AQI)":
+                v = value["air_quality"]
+                text = f"AQI: {v['aqi']} ({v['level']})"
+            else:
+                text = param
+            tk.Label(info_frame, text=text, anchor="w").pack(anchor="w")
+
+# Initial population of cards
+update_cards()
+
+# Start the main event loop
+root.mainloop()

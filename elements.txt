@@ -1,0 +1,12 @@
+entry
+label
+button
+listbox
+radiobutton
+checkbutton
+spinbox
+scrollbar
+image
+database (sqlite3)
+menu 
+menu (multi-layer)

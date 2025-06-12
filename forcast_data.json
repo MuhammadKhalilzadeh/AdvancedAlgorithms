@@ -1,0 +1,1336 @@
+{
+    "cities": {
+        "Qazvin": {
+            "forecast": [
+                {
+                    "date": "2024-03-20",
+                    "avatar": "sunny.png",
+                    "temperature": {
+                        "min": 8,
+                        "max": 18,
+                        "current": 15,
+                        "unit": "Celsius"
+                    },
+                    "atmospheric_pressure": {
+                        "value": 1013,
+                        "unit": "hPa"
+                    },
+                    "humidity": {
+                        "value": 65,
+                        "unit": "%"
+                    },
+                    "precipitation": {
+                        "value": 0,
+                        "unit": "mm",
+                        "probability": 10
+                    },
+                    "wind": {
+                        "speed": 12,
+                        "direction": "NW",
+                        "unit": "km/h"
+                    },
+                    "cloud_cover": {
+                        "value": 20,
+                        "unit": "%"
+                    },
+                    "uv_index": {
+                        "value": 4,
+                        "risk_level": "Moderate"
+                    },
+                    "air_quality": {
+                        "aqi": 45,
+                        "level": "Good",
+                        "pollutants": {
+                            "pm2_5": 12,
+                            "pm10": 25,
+                            "o3": 35,
+                            "no2": 20,
+                            "so2": 5
+                        }
+                    }
+                },
+                {
+                    "date": "2024-03-21",
+                    "avatar": "cloudy.png",
+                    "temperature": {
+                        "min": 7,
+                        "max": 17,
+                        "current": 14,
+                        "unit": "Celsius"
+                    },
+                    "atmospheric_pressure": {
+                        "value": 1014,
+                        "unit": "hPa"
+                    },
+                    "humidity": {
+                        "value": 70,
+                        "unit": "%"
+                    },
+                    "precipitation": {
+                        "value": 2,
+                        "unit": "mm",
+                        "probability": 30
+                    },
+                    "wind": {
+                        "speed": 15,
+                        "direction": "W",
+                        "unit": "km/h"
+                    },
+                    "cloud_cover": {
+                        "value": 40,
+                        "unit": "%"
+                    },
+                    "uv_index": {
+                        "value": 3,
+                        "risk_level": "Low"
+                    },
+                    "air_quality": {
+                        "aqi": 40,
+                        "level": "Good",
+                        "pollutants": {
+                            "pm2_5": 10,
+                            "pm10": 22,
+                            "o3": 32,
+                            "no2": 18,
+                            "so2": 4
+                        }
+                    }
+                },
+                {
+                    "date": "2024-03-22",
+                    "avatar": "rainy.png",
+                    "temperature": {
+                        "min": 6,
+                        "max": 16,
+                        "current": 13,
+                        "unit": "Celsius"
+                    },
+                    "atmospheric_pressure": {
+                        "value": 1012,
+                        "unit": "hPa"
+                    },
+                    "humidity": {
+                        "value": 75,
+                        "unit": "%"
+                    },
+                    "precipitation": {
+                        "value": 4,
+                        "unit": "mm",
+                        "probability": 45
+                    },
+                    "wind": {
+                        "speed": 18,
+                        "direction": "W",
+                        "unit": "km/h"
+                    },
+                    "cloud_cover": {
+                        "value": 70,
+                        "unit": "%"
+                    },
+                    "uv_index": {
+                        "value": 2,
+                        "risk_level": "Low"
+                    },
+                    "air_quality": {
+                        "aqi": 35,
+                        "level": "Good",
+                        "pollutants": {
+                            "pm2_5": 8,
+                            "pm10": 20,
+                            "o3": 30,
+                            "no2": 15,
+                            "so2": 3
+                        }
+                    }
+                },
+                {
+                    "date": "2024-03-23",
+                    "avatar": "cloudy.png",
+                    "temperature": {
+                        "min": 5,
+                        "max": 15,
+                        "current": 12,
+                        "unit": "Celsius"
+                    },
+                    "atmospheric_pressure": {
+                        "value": 1015,
+                        "unit": "hPa"
+                    },
+                    "humidity": {
+                        "value": 68,
+                        "unit": "%"
+                    },
+                    "precipitation": {
+                        "value": 1,
+                        "unit": "mm",
+                        "probability": 25
+                    },
+                    "wind": {
+                        "speed": 14,
+                        "direction": "NW",
+                        "unit": "km/h"
+                    },
+                    "cloud_cover": {
+                        "value": 45,
+                        "unit": "%"
+                    },
+                    "uv_index": {
+                        "value": 3,
+                        "risk_level": "Low"
+                    },
+                    "air_quality": {
+                        "aqi": 38,
+                        "level": "Good",
+                        "pollutants": {
+                            "pm2_5": 9,
+                            "pm10": 21,
+                            "o3": 31,
+                            "no2": 16,
+                            "so2": 4
+                        }
+                    }
+                },
+                {
+                    "date": "2024-03-24",
+                    "avatar": "sunny.png",
+                    "temperature": {
+                        "min": 7,
+                        "max": 17,
+                        "current": 14,
+                        "unit": "Celsius"
+                    },
+                    "atmospheric_pressure": {
+                        "value": 1016,
+                        "unit": "hPa"
+                    },
+                    "humidity": {
+                        "value": 60,
+                        "unit": "%"
+                    },
+                    "precipitation": {
+                        "value": 0,
+                        "unit": "mm",
+                        "probability": 5
+                    },
+                    "wind": {
+                        "speed": 10,
+                        "direction": "N",
+                        "unit": "km/h"
+                    },
+                    "cloud_cover": {
+                        "value": 20,
+                        "unit": "%"
+                    },
+                    "uv_index": {
+                        "value": 4,
+                        "risk_level": "Moderate"
+                    },
+                    "air_quality": {
+                        "aqi": 42,
+                        "level": "Good",
+                        "pollutants": {
+                            "pm2_5": 11,
+                            "pm10": 23,
+                            "o3": 33,
+                            "no2": 19,
+                            "so2": 4
+                        }
+                    }
+                },
+                {
+                    "date": "2024-03-25",
+                    "avatar": "sunny.png",
+                    "temperature": {
+                        "min": 9,
+                        "max": 19,
+                        "current": 16,
+                        "unit": "Celsius"
+                    },
+                    "atmospheric_pressure": {
+                        "value": 1014,
+                        "unit": "hPa"
+                    },
+                    "humidity": {
+                        "value": 55,
+                        "unit": "%"
+                    },
+                    "precipitation": {
+                        "value": 0,
+                        "unit": "mm",
+                        "probability": 3
+                    },
+                    "wind": {
+                        "speed": 8,
+                        "direction": "NE",
+                        "unit": "km/h"
+                    },
+                    "cloud_cover": {
+                        "value": 15,
+                        "unit": "%"
+                    },
+                    "uv_index": {
+                        "value": 5,
+                        "risk_level": "Moderate"
+                    },
+                    "air_quality": {
+                        "aqi": 45,
+                        "level": "Good",
+                        "pollutants": {
+                            "pm2_5": 12,
+                            "pm10": 25,
+                            "o3": 35,
+                            "no2": 20,
+                            "so2": 5
+                        }
+                    }
+                },
+                {
+                    "date": "2024-03-26",
+                    "avatar": "cloudy.png",
+                    "temperature": {
+                        "min": 8,
+                        "max": 18,
+                        "current": 15,
+                        "unit": "Celsius"
+                    },
+                    "atmospheric_pressure": {
+                        "value": 1013,
+                        "unit": "hPa"
+                    },
+                    "humidity": {
+                        "value": 62,
+                        "unit": "%"
+                    },
+                    "precipitation": {
+                        "value": 1,
+                        "unit": "mm",
+                        "probability": 20
+                    },
+                    "wind": {
+                        "speed": 12,
+                        "direction": "E",
+                        "unit": "km/h"
+                    },
+                    "cloud_cover": {
+                        "value": 35,
+                        "unit": "%"
+                    },
+                    "uv_index": {
+                        "value": 4,
+                        "risk_level": "Moderate"
+                    },
+                    "air_quality": {
+                        "aqi": 43,
+                        "level": "Good",
+                        "pollutants": {
+                            "pm2_5": 11,
+                            "pm10": 24,
+                            "o3": 34,
+                            "no2": 19,
+                            "so2": 5
+                        }
+                    }
+                }
+            ]
+        },
+        "Tehran": {
+            "forecast": [
+                {
+                    "date": "2024-03-20",
+                    "avatar": "sunny.png",
+                    "temperature": {
+                        "min": 12,
+                        "max": 22,
+                        "current": 19,
+                        "unit": "Celsius"
+                    },
+                    "atmospheric_pressure": {
+                        "value": 1012,
+                        "unit": "hPa"
+                    },
+                    "humidity": {
+                        "value": 45,
+                        "unit": "%"
+                    },
+                    "precipitation": {
+                        "value": 0,
+                        "unit": "mm",
+                        "probability": 5
+                    },
+                    "wind": {
+                        "speed": 8,
+                        "direction": "NE",
+                        "unit": "km/h"
+                    },
+                    "cloud_cover": {
+                        "value": 15,
+                        "unit": "%"
+                    },
+                    "uv_index": {
+                        "value": 6,
+                        "risk_level": "High"
+                    },
+                    "air_quality": {
+                        "aqi": 75,
+                        "level": "Moderate",
+                        "pollutants": {
+                            "pm2_5": 25,
+                            "pm10": 45,
+                            "o3": 45,
+                            "no2": 35,
+                            "so2": 15
+                        }
+                    }
+                },
+                {
+                    "date": "2024-03-21",
+                    "avatar": "sunny.png",
+                    "temperature": {
+                        "min": 13,
+                        "max": 23,
+                        "current": 20,
+                        "unit": "Celsius"
+                    },
+                    "atmospheric_pressure": {
+                        "value": 1011,
+                        "unit": "hPa"
+                    },
+                    "humidity": {
+                        "value": 40,
+                        "unit": "%"
+                    },
+                    "precipitation": {
+                        "value": 0,
+                        "unit": "mm",
+                        "probability": 3
+                    },
+                    "wind": {
+                        "speed": 6,
+                        "direction": "E",
+                        "unit": "km/h"
+                    },
+                    "cloud_cover": {
+                        "value": 10,
+                        "unit": "%"
+                    },
+                    "uv_index": {
+                        "value": 7,
+                        "risk_level": "High"
+                    },
+                    "air_quality": {
+                        "aqi": 80,
+                        "level": "Moderate",
+                        "pollutants": {
+                            "pm2_5": 28,
+                            "pm10": 48,
+                            "o3": 48,
+                            "no2": 38,
+                            "so2": 18
+                        }
+                    }
+                },
+                {
+                    "date": "2024-03-22",
+                    "avatar": "sunny.png",
+                    "temperature": {
+                        "min": 14,
+                        "max": 24,
+                        "current": 21,
+                        "unit": "Celsius"
+                    },
+                    "atmospheric_pressure": {
+                        "value": 1010,
+                        "unit": "hPa"
+                    },
+                    "humidity": {
+                        "value": 38,
+                        "unit": "%"
+                    },
+                    "precipitation": {
+                        "value": 0,
+                        "unit": "mm",
+                        "probability": 2
+                    },
+                    "wind": {
+                        "speed": 5,
+                        "direction": "SE",
+                        "unit": "km/h"
+                    },
+                    "cloud_cover": {
+                        "value": 8,
+                        "unit": "%"
+                    },
+                    "uv_index": {
+                        "value": 8,
+                        "risk_level": "Very High"
+                    },
+                    "air_quality": {
+                        "aqi": 85,
+                        "level": "Moderate",
+                        "pollutants": {
+                            "pm2_5": 30,
+                            "pm10": 50,
+                            "o3": 50,
+                            "no2": 40,
+                            "so2": 20
+                        }
+                    }
+                },
+                {
+                    "date": "2024-03-23",
+                    "avatar": "sunny.png",
+                    "temperature": {
+                        "min": 15,
+                        "max": 25,
+                        "current": 22,
+                        "unit": "Celsius"
+                    },
+                    "atmospheric_pressure": {
+                        "value": 1009,
+                        "unit": "hPa"
+                    },
+                    "humidity": {
+                        "value": 35,
+                        "unit": "%"
+                    },
+                    "precipitation": {
+                        "value": 0,
+                        "unit": "mm",
+                        "probability": 1
+                    },
+                    "wind": {
+                        "speed": 4,
+                        "direction": "S",
+                        "unit": "km/h"
+                    },
+                    "cloud_cover": {
+                        "value": 5,
+                        "unit": "%"
+                    },
+                    "uv_index": {
+                        "value": 9,
+                        "risk_level": "Very High"
+                    },
+                    "air_quality": {
+                        "aqi": 90,
+                        "level": "Moderate",
+                        "pollutants": {
+                            "pm2_5": 32,
+                            "pm10": 52,
+                            "o3": 52,
+                            "no2": 42,
+                            "so2": 22
+                        }
+                    }
+                },
+                {
+                    "date": "2024-03-24",
+                    "avatar": "cloudy.png",
+                    "temperature": {
+                        "min": 13,
+                        "max": 23,
+                        "current": 20,
+                        "unit": "Celsius"
+                    },
+                    "atmospheric_pressure": {
+                        "value": 1011,
+                        "unit": "hPa"
+                    },
+                    "humidity": {
+                        "value": 42,
+                        "unit": "%"
+                    },
+                    "precipitation": {
+                        "value": 0,
+                        "unit": "mm",
+                        "probability": 10
+                    },
+                    "wind": {
+                        "speed": 7,
+                        "direction": "SW",
+                        "unit": "km/h"
+                    },
+                    "cloud_cover": {
+                        "value": 25,
+                        "unit": "%"
+                    },
+                    "uv_index": {
+                        "value": 7,
+                        "risk_level": "High"
+                    },
+                    "air_quality": {
+                        "aqi": 82,
+                        "level": "Moderate",
+                        "pollutants": {
+                            "pm2_5": 28,
+                            "pm10": 48,
+                            "o3": 48,
+                            "no2": 38,
+                            "so2": 18
+                        }
+                    }
+                },
+                {
+                    "date": "2024-03-25",
+                    "avatar": "sunny.png",
+                    "temperature": {
+                        "min": 14,
+                        "max": 24,
+                        "current": 21,
+                        "unit": "Celsius"
+                    },
+                    "atmospheric_pressure": {
+                        "value": 1010,
+                        "unit": "hPa"
+                    },
+                    "humidity": {
+                        "value": 40,
+                        "unit": "%"
+                    },
+                    "precipitation": {
+                        "value": 0,
+                        "unit": "mm",
+                        "probability": 5
+                    },
+                    "wind": {
+                        "speed": 6,
+                        "direction": "W",
+                        "unit": "km/h"
+                    },
+                    "cloud_cover": {
+                        "value": 15,
+                        "unit": "%"
+                    },
+                    "uv_index": {
+                        "value": 8,
+                        "risk_level": "Very High"
+                    },
+                    "air_quality": {
+                        "aqi": 88,
+                        "level": "Moderate",
+                        "pollutants": {
+                            "pm2_5": 31,
+                            "pm10": 51,
+                            "o3": 51,
+                            "no2": 41,
+                            "so2": 21
+                        }
+                    }
+                },
+                {
+                    "date": "2024-03-26",
+                    "avatar": "cloudy.png",
+                    "temperature": {
+                        "min": 13,
+                        "max": 23,
+                        "current": 20,
+                        "unit": "Celsius"
+                    },
+                    "atmospheric_pressure": {
+                        "value": 1012,
+                        "unit": "hPa"
+                    },
+                    "humidity": {
+                        "value": 45,
+                        "unit": "%"
+                    },
+                    "precipitation": {
+                        "value": 0,
+                        "unit": "mm",
+                        "probability": 15
+                    },
+                    "wind": {
+                        "speed": 9,
+                        "direction": "NW",
+                        "unit": "km/h"
+                    },
+                    "cloud_cover": {
+                        "value": 30,
+                        "unit": "%"
+                    },
+                    "uv_index": {
+                        "value": 6,
+                        "risk_level": "High"
+                    },
+                    "air_quality": {
+                        "aqi": 85,
+                        "level": "Moderate",
+                        "pollutants": {
+                            "pm2_5": 29,
+                            "pm10": 49,
+                            "o3": 49,
+                            "no2": 39,
+                            "so2": 19
+                        }
+                    }
+                }
+            ]
+        },
+        "Karaj": {
+            "forecast": [
+                {
+                    "date": "2024-03-20",
+                    "avatar": "cloudy.png",
+                    "temperature": {
+                        "min": 10,
+                        "max": 20,
+                        "current": 17,
+                        "unit": "Celsius"
+                    },
+                    "atmospheric_pressure": {
+                        "value": 1014,
+                        "unit": "hPa"
+                    },
+                    "humidity": {
+                        "value": 55,
+                        "unit": "%"
+                    },
+                    "precipitation": {
+                        "value": 0,
+                        "unit": "mm",
+                        "probability": 8
+                    },
+                    "wind": {
+                        "speed": 10,
+                        "direction": "W",
+                        "unit": "km/h"
+                    },
+                    "cloud_cover": {
+                        "value": 25,
+                        "unit": "%"
+                    },
+                    "uv_index": {
+                        "value": 5,
+                        "risk_level": "Moderate"
+                    },
+                    "air_quality": {
+                        "aqi": 60,
+                        "level": "Moderate",
+                        "pollutants": {
+                            "pm2_5": 20,
+                            "pm10": 35,
+                            "o3": 40,
+                            "no2": 30,
+                            "so2": 10
+                        }
+                    }
+                },
+                {
+                    "date": "2024-03-21",
+                    "avatar": "rainy.png",
+                    "temperature": {
+                        "min": 11,
+                        "max": 21,
+                        "current": 18,
+                        "unit": "Celsius"
+                    },
+                    "atmospheric_pressure": {
+                        "value": 1013,
+                        "unit": "hPa"
+                    },
+                    "humidity": {
+                        "value": 50,
+                        "unit": "%"
+                    },
+                    "precipitation": {
+                        "value": 3,
+                        "unit": "mm",
+                        "probability": 60
+                    },
+                    "wind": {
+                        "speed": 8,
+                        "direction": "SW",
+                        "unit": "km/h"
+                    },
+                    "cloud_cover": {
+                        "value": 60,
+                        "unit": "%"
+                    },
+                    "uv_index": {
+                        "value": 6,
+                        "risk_level": "High"
+                    },
+                    "air_quality": {
+                        "aqi": 65,
+                        "level": "Moderate",
+                        "pollutants": {
+                            "pm2_5": 22,
+                            "pm10": 38,
+                            "o3": 42,
+                            "no2": 32,
+                            "so2": 12
+                        }
+                    }
+                },
+                {
+                    "date": "2024-03-22",
+                    "avatar": "rainy.png",
+                    "temperature": {
+                        "min": 9,
+                        "max": 19,
+                        "current": 16,
+                        "unit": "Celsius"
+                    },
+                    "atmospheric_pressure": {
+                        "value": 1012,
+                        "unit": "hPa"
+                    },
+                    "humidity": {
+                        "value": 65,
+                        "unit": "%"
+                    },
+                    "precipitation": {
+                        "value": 5,
+                        "unit": "mm",
+                        "probability": 55
+                    },
+                    "wind": {
+                        "speed": 16,
+                        "direction": "SW",
+                        "unit": "km/h"
+                    },
+                    "cloud_cover": {
+                        "value": 75,
+                        "unit": "%"
+                    },
+                    "uv_index": {
+                        "value": 3,
+                        "risk_level": "Low"
+                    },
+                    "air_quality": {
+                        "aqi": 55,
+                        "level": "Moderate",
+                        "pollutants": {
+                            "pm2_5": 18,
+                            "pm10": 32,
+                            "o3": 38,
+                            "no2": 28,
+                            "so2": 8
+                        }
+                    }
+                },
+                {
+                    "date": "2024-03-23",
+                    "avatar": "cloudy.png",
+                    "temperature": {
+                        "min": 8,
+                        "max": 18,
+                        "current": 15,
+                        "unit": "Celsius"
+                    },
+                    "atmospheric_pressure": {
+                        "value": 1014,
+                        "unit": "hPa"
+                    },
+                    "humidity": {
+                        "value": 60,
+                        "unit": "%"
+                    },
+                    "precipitation": {
+                        "value": 2,
+                        "unit": "mm",
+                        "probability": 25
+                    },
+                    "wind": {
+                        "speed": 12,
+                        "direction": "W",
+                        "unit": "km/h"
+                    },
+                    "cloud_cover": {
+                        "value": 45,
+                        "unit": "%"
+                    },
+                    "uv_index": {
+                        "value": 4,
+                        "risk_level": "Moderate"
+                    },
+                    "air_quality": {
+                        "aqi": 58,
+                        "level": "Moderate",
+                        "pollutants": {
+                            "pm2_5": 19,
+                            "pm10": 33,
+                            "o3": 39,
+                            "no2": 29,
+                            "so2": 9
+                        }
+                    }
+                },
+                {
+                    "date": "2024-03-24",
+                    "avatar": "sunny.png",
+                    "temperature": {
+                        "min": 10,
+                        "max": 20,
+                        "current": 17,
+                        "unit": "Celsius"
+                    },
+                    "atmospheric_pressure": {
+                        "value": 1015,
+                        "unit": "hPa"
+                    },
+                    "humidity": {
+                        "value": 52,
+                        "unit": "%"
+                    },
+                    "precipitation": {
+                        "value": 0,
+                        "unit": "mm",
+                        "probability": 5
+                    },
+                    "wind": {
+                        "speed": 8,
+                        "direction": "N",
+                        "unit": "km/h"
+                    },
+                    "cloud_cover": {
+                        "value": 20,
+                        "unit": "%"
+                    },
+                    "uv_index": {
+                        "value": 5,
+                        "risk_level": "Moderate"
+                    },
+                    "air_quality": {
+                        "aqi": 62,
+                        "level": "Moderate",
+                        "pollutants": {
+                            "pm2_5": 21,
+                            "pm10": 36,
+                            "o3": 41,
+                            "no2": 31,
+                            "so2": 11
+                        }
+                    }
+                },
+                {
+                    "date": "2024-03-25",
+                    "avatar": "sunny.png",
+                    "temperature": {
+                        "min": 11,
+                        "max": 21,
+                        "current": 18,
+                        "unit": "Celsius"
+                    },
+                    "atmospheric_pressure": {
+                        "value": 1013,
+                        "unit": "hPa"
+                    },
+                    "humidity": {
+                        "value": 48,
+                        "unit": "%"
+                    },
+                    "precipitation": {
+                        "value": 0,
+                        "unit": "mm",
+                        "probability": 3
+                    },
+                    "wind": {
+                        "speed": 7,
+                        "direction": "NE",
+                        "unit": "km/h"
+                    },
+                    "cloud_cover": {
+                        "value": 15,
+                        "unit": "%"
+                    },
+                    "uv_index": {
+                        "value": 6,
+                        "risk_level": "High"
+                    },
+                    "air_quality": {
+                        "aqi": 65,
+                        "level": "Moderate",
+                        "pollutants": {
+                            "pm2_5": 23,
+                            "pm10": 39,
+                            "o3": 43,
+                            "no2": 33,
+                            "so2": 13
+                        }
+                    }
+                },
+                {
+                    "date": "2024-03-26",
+                    "avatar": "cloudy.png",
+                    "temperature": {
+                        "min": 10,
+                        "max": 20,
+                        "current": 17,
+                        "unit": "Celsius"
+                    },
+                    "atmospheric_pressure": {
+                        "value": 1014,
+                        "unit": "hPa"
+                    },
+                    "humidity": {
+                        "value": 55,
+                        "unit": "%"
+                    },
+                    "precipitation": {
+                        "value": 1,
+                        "unit": "mm",
+                        "probability": 20
+                    },
+                    "wind": {
+                        "speed": 10,
+                        "direction": "E",
+                        "unit": "km/h"
+                    },
+                    "cloud_cover": {
+                        "value": 35,
+                        "unit": "%"
+                    },
+                    "uv_index": {
+                        "value": 5,
+                        "risk_level": "Moderate"
+                    },
+                    "air_quality": {
+                        "aqi": 63,
+                        "level": "Moderate",
+                        "pollutants": {
+                            "pm2_5": 22,
+                            "pm10": 37,
+                            "o3": 42,
+                            "no2": 32,
+                            "so2": 12
+                        }
+                    }
+                }
+            ]
+        },
+        "Zanjan": {
+            "forecast": [
+                {
+                    "date": "2024-03-20",
+                    "avatar": "cloudy.png",
+                    "temperature": {
+                        "min": 6,
+                        "max": 16,
+                        "current": 13,
+                        "unit": "Celsius"
+                    },
+                    "atmospheric_pressure": {
+                        "value": 1015,
+                        "unit": "hPa"
+                    },
+                    "humidity": {
+                        "value": 60,
+                        "unit": "%"
+                    },
+                    "precipitation": {
+                        "value": 0,
+                        "unit": "mm",
+                        "probability": 15
+                    },
+                    "wind": {
+                        "speed": 15,
+                        "direction": "N",
+                        "unit": "km/h"
+                    },
+                    "cloud_cover": {
+                        "value": 30,
+                        "unit": "%"
+                    },
+                    "uv_index": {
+                        "value": 3,
+                        "risk_level": "Low"
+                    },
+                    "air_quality": {
+                        "aqi": 35,
+                        "level": "Good",
+                        "pollutants": {
+                            "pm2_5": 10,
+                            "pm10": 20,
+                            "o3": 30,
+                            "no2": 15,
+                            "so2": 8
+                        }
+                    }
+                },
+                {
+                    "date": "2024-03-21",
+                    "avatar": "rainy.png",
+                    "temperature": {
+                        "min": 5,
+                        "max": 15,
+                        "current": 12,
+                        "unit": "Celsius"
+                    },
+                    "atmospheric_pressure": {
+                        "value": 1016,
+                        "unit": "hPa"
+                    },
+                    "humidity": {
+                        "value": 65,
+                        "unit": "%"
+                    },
+                    "precipitation": {
+                        "value": 3,
+                        "unit": "mm",
+                        "probability": 35
+                    },
+                    "wind": {
+                        "speed": 18,
+                        "direction": "NW",
+                        "unit": "km/h"
+                    },
+                    "cloud_cover": {
+                        "value": 45,
+                        "unit": "%"
+                    },
+                    "uv_index": {
+                        "value": 2,
+                        "risk_level": "Low"
+                    },
+                    "air_quality": {
+                        "aqi": 30,
+                        "level": "Good",
+                        "pollutants": {
+                            "pm2_5": 8,
+                            "pm10": 18,
+                            "o3": 28,
+                            "no2": 12,
+                            "so2": 6
+                        }
+                    }
+                },
+                {
+                    "date": "2024-03-22",
+                    "avatar": "rainy.png",
+                    "temperature": {
+                        "min": 4,
+                        "max": 14,
+                        "current": 11,
+                        "unit": "Celsius"
+                    },
+                    "atmospheric_pressure": {
+                        "value": 1014,
+                        "unit": "hPa"
+                    },
+                    "humidity": {
+                        "value": 70,
+                        "unit": "%"
+                    },
+                    "precipitation": {
+                        "value": 6,
+                        "unit": "mm",
+                        "probability": 60
+                    },
+                    "wind": {
+                        "speed": 20,
+                        "direction": "NW",
+                        "unit": "km/h"
+                    },
+                    "cloud_cover": {
+                        "value": 80,
+                        "unit": "%"
+                    },
+                    "uv_index": {
+                        "value": 2,
+                        "risk_level": "Low"
+                    },
+                    "air_quality": {
+                        "aqi": 28,
+                        "level": "Good",
+                        "pollutants": {
+                            "pm2_5": 7,
+                            "pm10": 16,
+                            "o3": 26,
+                            "no2": 10,
+                            "so2": 5
+                        }
+                    }
+                },
+                {
+                    "date": "2024-03-23",
+                    "avatar": "cloudy.png",
+                    "temperature": {
+                        "min": 3,
+                        "max": 13,
+                        "current": 10,
+                        "unit": "Celsius"
+                    },
+                    "atmospheric_pressure": {
+                        "value": 1016,
+                        "unit": "hPa"
+                    },
+                    "humidity": {
+                        "value": 68,
+                        "unit": "%"
+                    },
+                    "precipitation": {
+                        "value": 2,
+                        "unit": "mm",
+                        "probability": 30
+                    },
+                    "wind": {
+                        "speed": 16,
+                        "direction": "N",
+                        "unit": "km/h"
+                    },
+                    "cloud_cover": {
+                        "value": 50,
+                        "unit": "%"
+                    },
+                    "uv_index": {
+                        "value": 2,
+                        "risk_level": "Low"
+                    },
+                    "air_quality": {
+                        "aqi": 25,
+                        "level": "Good",
+                        "pollutants": {
+                            "pm2_5": 6,
+                            "pm10": 15,
+                            "o3": 25,
+                            "no2": 9,
+                            "so2": 4
+                        }
+                    }
+                },
+                {
+                    "date": "2024-03-24",
+                    "avatar": "sunny.png",
+                    "temperature": {
+                        "min": 5,
+                        "max": 15,
+                        "current": 12,
+                        "unit": "Celsius"
+                    },
+                    "atmospheric_pressure": {
+                        "value": 1017,
+                        "unit": "hPa"
+                    },
+                    "humidity": {
+                        "value": 60,
+                        "unit": "%"
+                    },
+                    "precipitation": {
+                        "value": 0,
+                        "unit": "mm",
+                        "probability": 5
+                    },
+                    "wind": {
+                        "speed": 12,
+                        "direction": "NE",
+                        "unit": "km/h"
+                    },
+                    "cloud_cover": {
+                        "value": 20,
+                        "unit": "%"
+                    },
+                    "uv_index": {
+                        "value": 3,
+                        "risk_level": "Low"
+                    },
+                    "air_quality": {
+                        "aqi": 28,
+                        "level": "Good",
+                        "pollutants": {
+                            "pm2_5": 7,
+                            "pm10": 17,
+                            "o3": 27,
+                            "no2": 11,
+                            "so2": 5
+                        }
+                    }
+                },
+                {
+                    "date": "2024-03-25",
+                    "avatar": "sunny.png",
+                    "temperature": {
+                        "min": 6,
+                        "max": 16,
+                        "current": 13,
+                        "unit": "Celsius"
+                    },
+                    "atmospheric_pressure": {
+                        "value": 1015,
+                        "unit": "hPa"
+                    },
+                    "humidity": {
+                        "value": 58,
+                        "unit": "%"
+                    },
+                    "precipitation": {
+                        "value": 0,
+                        "unit": "mm",
+                        "probability": 3
+                    },
+                    "wind": {
+                        "speed": 10,
+                        "direction": "E",
+                        "unit": "km/h"
+                    },
+                    "cloud_cover": {
+                        "value": 15,
+                        "unit": "%"
+                    },
+                    "uv_index": {
+                        "value": 4,
+                        "risk_level": "Moderate"
+                    },
+                    "air_quality": {
+                        "aqi": 30,
+                        "level": "Good",
+                        "pollutants": {
+                            "pm2_5": 8,
+                            "pm10": 18,
+                            "o3": 28,
+                            "no2": 12,
+                            "so2": 6
+                        }
+                    }
+                },
+                {
+                    "date": "2024-03-26",
+                    "avatar": "cloudy.png",
+                    "temperature": {
+                        "min": 5,
+                        "max": 15,
+                        "current": 12,
+                        "unit": "Celsius"
+                    },
+                    "atmospheric_pressure": {
+                        "value": 1016,
+                        "unit": "hPa"
+                    },
+                    "humidity": {
+                        "value": 62,
+                        "unit": "%"
+                    },
+                    "precipitation": {
+                        "value": 1,
+                        "unit": "mm",
+                        "probability": 20
+                    },
+                    "wind": {
+                        "speed": 14,
+                        "direction": "SE",
+                        "unit": "km/h"
+                    },
+                    "cloud_cover": {
+                        "value": 35,
+                        "unit": "%"
+                    },
+                    "uv_index": {
+                        "value": 3,
+                        "risk_level": "Low"
+                    },
+                    "air_quality": {
+                        "aqi": 29,
+                        "level": "Good",
+                        "pollutants": {
+                            "pm2_5": 7,
+                            "pm10": 17,
+                            "o3": 27,
+                            "no2": 11,
+                            "so2": 5
+                        }
+                    }
+                }
+            ]
+        }
+    }
+}
