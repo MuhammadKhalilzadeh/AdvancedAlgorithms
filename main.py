@@ -5,6 +5,7 @@ from tkinter import PhotoImage, ttk
 import time
 from datetime import datetime, timedelta
 from PIL import Image, ImageTk
+import sqlite3
 
 # --- Weather to image mapping logic ---
 def weather_to_image(day):
@@ -174,12 +175,96 @@ menubar.add_cascade(label="Controls", menu=controls_menu)
 # Add theme submenu
 theme_menu = tk.Menu(controls_menu, tearoff=0)
 controls_menu.add_cascade(label="Theme", menu=theme_menu)
-theme_menu.add_command(label="Light")
-theme_menu.add_command(label="Dark")
 
-# Add exit option
-controls_menu.add_separator()
-controls_menu.add_command(label="Exit", command=root.quit)
+light_theme = {
+    'bg': '#f5f5f5',
+    'fg': '#222',
+    'card_bg': 'white',
+    'card_shadow': '#e0e0e0',
+    'accent': '#FFD700',
+    'accent_fg': '#222',
+    'button_active_bg': '#FFA500',
+    'button_active_fg': 'white',
+    'divider': '#eee',
+    'input_bg': 'white',
+    'input_fg': '#222',
+    'menu_bg': '#f5f5f5',
+    'menu_fg': '#222',
+}
+dark_theme = {
+    'bg': '#121212',  # Android dark background
+    'fg': '#FFFFFF',  # Primary text
+    'card_bg': '#1E1E1E',  # Card background
+    'card_shadow': '#232323',
+    'accent': '#03DAC6',  # Teal accent
+    'accent_fg': '#121212',
+    'button_active_bg': '#2196F3',  # Blue active
+    'button_active_fg': '#FFFFFF',
+    'divider': '#222222',
+    'input_bg': '#232323',
+    'input_fg': '#FFFFFF',
+    'menu_bg': '#121212',
+    'menu_fg': '#03DAC6',
+    'secondary_fg': '#B0B0B0',
+}
+current_theme = light_theme
+
+def apply_theme(theme):
+    global current_theme
+    current_theme = theme
+    # Root window
+    root.configure(bg=theme['bg'])
+    # Main frame and cards
+    main_frame.configure(bg=theme['bg'])
+    scrollable_frame.configure(bg=theme['bg'])
+    container_frame.configure(bg=theme['bg'])
+    city_frame.configure(bg=theme['card_bg'], fg=theme['fg'])
+    weather_frame.configure(bg=theme['card_bg'], fg=theme['fg'])
+    left_column.configure(bg=theme['card_bg'])
+    right_column.configure(bg=theme['card_bg'])
+    cards_frame.configure(bg=theme['bg'])
+    grid_frame.configure(bg=theme['bg'])
+    # Update all children recursively
+    def update_widget_colors(widget):
+        for child in widget.winfo_children():
+            if isinstance(child, tk.Frame):
+                child.configure(bg=theme['bg'])
+            elif isinstance(child, tk.LabelFrame):
+                child.configure(bg=theme['card_bg'], fg=theme['fg'])
+            elif isinstance(child, tk.Label):
+                # Use secondary_fg for less important text
+                fg = theme['fg']
+                if hasattr(child, 'cget') and child.cget('font'):
+                    font = str(child.cget('font'))
+                    if '10' in font or '11' in font or '12' in font:
+                        fg = theme.get('secondary_fg', theme['fg'])
+                child.configure(bg=theme['bg'], fg=fg)
+            elif isinstance(child, tk.Button):
+                child.configure(bg=theme['accent'], fg=theme['accent_fg'], activebackground=theme['button_active_bg'], activeforeground=theme['button_active_fg'])
+            elif isinstance(child, tk.Checkbutton):
+                child.configure(bg=theme['card_bg'], fg=theme['fg'], activebackground=theme['card_bg'])
+            elif isinstance(child, tk.Radiobutton):
+                child.configure(bg=theme['card_bg'], fg=theme['fg'], activebackground=theme['card_bg'])
+            elif isinstance(child, tk.Canvas):
+                child.configure(bg=theme['bg'], highlightbackground=theme['bg'])
+            elif isinstance(child, tk.Scrollbar):
+                child.configure(bg=theme['bg'], troughcolor=theme['card_bg'], activebackground=theme['accent'])
+            update_widget_colors(child)
+    update_widget_colors(root)
+    # Update popups and dynamic frames
+    for w in root.winfo_children():
+        if isinstance(w, tk.Toplevel):
+            w.configure(bg=theme['bg'])
+            update_widget_colors(w)
+    update_cards()
+
+def set_light_theme():
+    apply_theme(light_theme)
+def set_dark_theme():
+    apply_theme(dark_theme)
+
+theme_menu.add_command(label="Light", command=set_light_theme)
+theme_menu.add_command(label="Dark", command=set_dark_theme)
 
 # Create Sections menu
 sections_menu = tk.Menu(menubar, tearoff=0)
@@ -348,7 +433,7 @@ def update_cards():
     
     city = selected_city.get()
     params = [p for p in weather_params if weather_vars[p].get()]
-    days = forecast_data["cities"][city]["forecast"]
+    days = forecast_data["cities"][city]["forecast"][:forecast_days_var.get()]
     
     # Calculate number of columns based on window width
     # Each card will be approximately 300 pixels wide
@@ -442,6 +527,18 @@ def on_window_resize(event):
             root._last_width = root.winfo_width()
 
 root.bind("<Configure>", on_window_resize)
+
+# --- Spinbox for forecast days ---
+spinbox_frame = tk.Frame(scrollable_frame)
+spinbox_frame.pack(fill="x", padx=20, pady=(0, 10))
+tk.Label(spinbox_frame, text="Forecast Days:").pack(side="left")
+forecast_days_var = tk.IntVar(value=7)
+forecast_spinbox = tk.Spinbox(spinbox_frame, from_=1, to=7, width=3, textvariable=forecast_days_var)
+forecast_spinbox.pack(side="left", padx=(5, 0))
+
+def update_cards_with_days():
+    update_cards()
+forecast_spinbox.config(command=update_cards_with_days)
 
 # Initial population of cards
 update_cards()
@@ -586,6 +683,72 @@ def show_today_view():
 
     # Initial position update
     today_frame.after(100, update_content_position)
+
+# --- Notes Database Setup ---
+conn = sqlite3.connect('weather_notes.db')
+c = conn.cursor()
+c.execute('''CREATE TABLE IF NOT EXISTS notes (
+    city TEXT,
+    note TEXT
+)''')
+conn.commit()
+
+def save_note_to_db(city, note):
+    c.execute('INSERT INTO notes (city, note) VALUES (?, ?)', (city, note))
+    conn.commit()
+
+def get_notes_from_db(city):
+    c.execute('SELECT note FROM notes WHERE city=?', (city,))
+    return [row[0] for row in c.fetchall()]
+
+def delete_note_from_db(city, note):
+    c.execute('DELETE FROM notes WHERE city=? AND note=?', (city, note))
+    conn.commit()
+
+# --- Notes Section UI ---
+notes_frame = tk.LabelFrame(scrollable_frame, text="City Notes", padx=10, pady=10)
+notes_frame.pack(fill="x", padx=20, pady=(0, 20))
+
+note_entry = tk.Entry(notes_frame, width=40)
+note_entry.pack(side="left", padx=(0, 10))
+
+add_note_button = tk.Button(notes_frame, text="Add Note", width=10)
+add_note_button.pack(side="left")
+
+def add_note():
+    city = selected_city.get()
+    note = note_entry.get().strip()
+    if note:
+        save_note_to_db(city, note)
+        note_entry.delete(0, tk.END)
+        update_notes_list()
+add_note_button.config(command=add_note)
+
+notes_listbox = tk.Listbox(notes_frame, width=50, height=4)
+notes_listbox.pack(side="left", padx=(10, 0))
+
+def update_notes_list():
+    city = selected_city.get()
+    notes_listbox.delete(0, tk.END)
+    for note in get_notes_from_db(city):
+        notes_listbox.insert(tk.END, note)
+
+def on_city_change():
+    update_cards()
+    update_notes_list()
+
+selected_city.trace_add('write', lambda *args: on_city_change())
+
+# Delete note on double-click
+
+def on_note_double_click(event):
+    selection = notes_listbox.curselection()
+    if selection:
+        note = notes_listbox.get(selection[0])
+        city = selected_city.get()
+        delete_note_from_db(city, note)
+        update_notes_list()
+notes_listbox.bind('<Double-Button-1>', on_note_double_click)
 
 # Start the main event loop
 root.mainloop()
